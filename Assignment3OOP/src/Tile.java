@@ -3,18 +3,8 @@ import java.awt.Image;
 /**
  * This class represent a tile
  */
-public class Tile implements ITile
+public class Tile extends EmptyTile
 {
-	/**
-	 * The position of this tile
-	 */
-	private int _position;
-	
-	/**
-	 * The desirable position of this tile - the position on a solved board
-	 */
-	private int _desirablePosition;
-	
 	/**
 	 * The Image of this tile
 	 */
@@ -28,31 +18,14 @@ public class Tile implements ITile
 	 */
 	public Tile(int position, int desirablePosition, Image content)
 	{
-		_position = position;
-		_desirablePosition = desirablePosition;
+		super(position, desirablePosition);
+		
+		if(content == null)
+			throw new IllegalArgumentException("recived null as an image!");
+		
 		_content = content;
 	}
 	
-	@Override
-	public int position() {
-		return _position;
-	}
-
-	@Override
-	public void moveTo(int newPos) {
-		_position = newPos;		
-	}
-
-	@Override
-	public int desirablePosition() {
-		return _desirablePosition;
-	}
-
-	@Override
-	public boolean isInPlace() {
-		return position() == desirablePosition();
-	}
-
 	@Override
 	public Image content() {
 		return _content;

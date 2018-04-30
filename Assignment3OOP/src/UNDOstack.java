@@ -16,11 +16,14 @@ public class UNDOstack
 	private IBoard _board;
 	
 	/**
-	 * The cunstractor of the UNDO class
+	 * The constructor of the UNDO class
 	 * @param board the board this UNDO is tracking
 	 */
-	public UNDOstack(IBoard board)
-	{
+	public UNDOstack(IBoard board){
+	
+		if(board== null)
+			throw new IllegalArgumentException("recived a null board!");
+		
 		_board = board;
 		_turns = new Stack<>();
 	}
@@ -29,8 +32,7 @@ public class UNDOstack
 	 * Check if there are any turns to undo
 	 * @return true if there is at least one turn to undo, false otherwise
 	 */
-	public boolean canUndo()
-	{
+	public boolean canUndo(){
 		return _turns.isEmpty();
 	}
 	
@@ -39,18 +41,17 @@ public class UNDOstack
 	 * @param Tile the tile that were moved
 	 * @param Origin the position of the tile before it were moved
 	 */
-	public void push(int tile, int origin)
-	{
+	public void push(int tile, int origin){
 		_turns.push(new Turn(tile, origin));
 	}
 	
 	/**
 	 * Undo the last operation
 	 */
-	public void Undo()
-	{
+	public void Undo(){
+		
 		if(!canUndo())
-			throw new  IllegalStateException();
+			throw new IllegalStateException();
 		
 		Turn tLastTurn  =  _turns.pop();
 		_board.moveTile(tLastTurn.getTile(), tLastTurn.getOrigin());
@@ -78,8 +79,11 @@ public class UNDOstack
 		 * @param tile The tile that were moved this turn
 		 * @param originalPosition the position of the tile at the start of the turn
 		 */
-		public Turn(int tile, int originalPosition)
-		{
+		public Turn(int tile, int originalPosition){
+		
+			if(tile <= 0 | originalPosition <= 0 )
+				throw new IllegalStateException("position must be greater than 0!");
+			
 			_tile = tile;
 			_originalPosition = originalPosition;
 		}
@@ -88,8 +92,7 @@ public class UNDOstack
 		 * getter to the tile
 		 * @return The number of the moved tile
 		 */
-		public int getTile()
-		{
+		public int getTile(){
 			return _tile;
 		}
 		
@@ -97,8 +100,7 @@ public class UNDOstack
 		 * getter to the origin of the tile
 		 * @return The origin of the moved tile- The position at the beginning of the turn
 		 */
-		public int getOrigin()
-		{
+		public int getOrigin(){
 			return _originalPosition;
 		}
 	}

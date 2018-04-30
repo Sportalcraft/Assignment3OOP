@@ -19,6 +19,12 @@ public class Board implements IBoard
 	private int _moves; 
 	
 	public Board(int size, ITile[][] tiles){
+		
+		if(size <= 0)
+			throw new IllegalArgumentException("size must be graqter than 0!");
+		
+		VerifyBoard(tiles); // Input checking for the board
+		
 		_size = size;
 		_boardMatrix = tiles;
 		_moves = 0;
@@ -35,29 +41,19 @@ public class Board implements IBoard
 		if(!canMove(tileNum, newPos))
 			throw new IllegalArgumentException("This operation could not be done!");
 		
-		getTile(tileNum).moveTo(newPos);
+		swap(tileNum, newPos);
 		_moves++; // A move was made
 	}
 
 	@Override
 	public boolean isComplete() {
-		
-		int size =  boardSize();
-		
-		if( _boardMatrix[size][size] != null)
-			return false; //EmtptyTile no in right-down corner
-		
-		for(int i = 0; i< size; i++)
-		{
-			for(int j = 0; j< size; j++)
+			
+		for(ITile[] row : _boardMatrix)
+		{		
+			for(ITile tile : row)
 			{
-				ITile tile = _boardMatrix[i][j];
-				
-				if(i != size | j != size) // not The Empty Tile
-				{
-					if(!tile.isInPlace())
-						return false;
-				}
+				if(!tile.isInPlace())
+					return false;
 			}
 		}
 		
@@ -69,26 +65,96 @@ public class Board implements IBoard
 		return _moves;
 	}
 	
+	
 	/**
-	 * gett the tile with the given position
-	 * @param num the position of the tile
-	 * @return the tile at the given position
+	 * check if a board is legal
+	 * @param board the board to check
+	 * @throws IllegalArgumentException if the board is not legal
 	 */
-	private ITile getTile(int num){
+	private void VerifyBoard(ITile[][] board) throws IllegalArgumentException
+	{
+		int size;
+		boolean emptyFound = false; // Exactly one empty tile is allowed
 		
-		int tRow = 	num/boardSize();
-		int tCol = 	num%boardSize();
+		if(board == null)
+			throw new IllegalArgumentException("The board is null!");
 		
-		return _boardMatrix[tRow][tCol];
+		size = board.length;
+		
+		if(size == 0)
+			throw new IllegalArgumentException("The board is empty!");
+		
+		
+		for(ITile[] row : board)
+		{
+			if(row == null)
+				throw new IllegalArgumentException("The board have a row that is null!");
+			
+			if(row.length != size)
+				throw new IllegalArgumentException("The board have a row that is have a diffrent leangth that the baord size!");
+			
+			
+			for(ITile tile : row)
+			{
+				if(tile == null)
+					throw new IllegalArgumentException("The board have a null tile!");
+				
+				
+				if(isTheEmptyTile(tile))
+				{
+					if(emptyFound)
+						throw new IllegalArgumentException("The board have more than one empty tiles!");
+					
+					emptyFound = true;
+				}
+			}
+		}
+		
 	}
 	
 	/**
-	 * Check if a given position is the place that have no tile in it
+	 * get the tile with the given position
+	 * @param num the position of the tile
+	 * @return the tile at the given position
+	 */
+	private ITile getTile(int num){		
+		return _boardMatrix[getTileRow(num)][getTileCol(num)];
+	}
+	
+	/**
+	 * calculate the row of the n tile
+	 * @param num the position of the tile
+	 * @return the row that this tile is in
+	 */
+	private int getTileRow(int num){
+		return num / boardSize();
+	}
+	
+	/**
+	 * calculate the column of the n tile
+	 * @param num the position of the tile
+	 * @return the column that this tile is in
+	 */
+	private int getTileCol(int num){
+		return num % boardSize();
+	}
+	
+	/**
+	 * Check if a given tile is the empty tile
 	 * @param pos the position to check
 	 * @return true if this position is not occupied by any tile, false otherwise
 	 */
+	private boolean isTheEmptyTile(ITile pos){
+		return pos instanceof EmptyTile & !(pos instanceof Tile);
+	}
+	
+	/**
+	 * Check if a given position is the empty tile
+	 * @param pos the position to check
+	 * @return true if this position is the empty tile, false otherwise
+	 */
 	private boolean isTheEmptyTile(int pos){
-		return getTile(pos) == null;
+		return isTheEmptyTile(getTile(pos));
 	}
 	
 	/**
@@ -131,6 +197,23 @@ public class Board implements IBoard
 		//return true if one of tile1's neighbors is tile2
 		
 		return tile2 == tLeft | tile2 == tRight | tile2 == tUp | tile2 == tDown;
+	}
+	
+	/**
+	 * swap two tiles in the board
+	 * @param tileNum
+	 * @param newPos
+	 */
+	private void swap(int tile1, int tile2) {
+		
+		ITile tTile1 =  _boardMatrix[getTileRow(tile1)][getTileCol(tile1)];
+		ITile tTile2 =  _boardMatrix[getTileRow(tile2)][getTileCol(tile2)];
+		
+		tTile1.moveTo(tile2);
+		tTile2.moveTo(tile1);
+		
+		_boardMatrix[getTileRow(tile1)][getTileCol(tile1)] = tTile2;
+		_boardMatrix[getTileRow(tile2)][getTileCol(tile2)] = tTile1;
 	}
 
 }
