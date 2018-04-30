@@ -33,7 +33,7 @@ public class UNDOstack
 	 * @return true if there is at least one turn to undo, false otherwise
 	 */
 	public boolean canUndo(){
-		return _turns.isEmpty();
+		return !_turns.isEmpty();
 	}
 	
 	/**

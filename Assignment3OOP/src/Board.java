@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -6,11 +7,6 @@ import java.util.Vector;
  */
 public class Board implements IBoard
 {
-	/**
-	 * The size of the board is sizeXsize
-	 */
-	private int _size;
-	
 	/**
 	 * holds the tiles if this board
 	 */
@@ -21,21 +17,17 @@ public class Board implements IBoard
 	 */
 	private int _moves; 
 	
-	public Board(int size, ITile[][] tiles){
-		
-		if(size <= 0)
-			throw new IllegalArgumentException("size must be greater than 0!");
+	public Board(ITile[][] tiles){
 		
 		VerifyBoard(tiles); // Input checking for the board
 		
-		_size = size;
 		_boardMatrix = tiles;
 		_moves = 0;
 	}
 	
 	@Override
 	public int boardSize() {
-		return _size;
+		return _boardMatrix.length;
 	}
 
 	@Override
@@ -71,7 +63,6 @@ public class Board implements IBoard
 	public int moves() {
 		return _moves;
 	}
-	
 	
 	/**
 	 * check if a board is legal
@@ -204,16 +195,33 @@ public class Board implements IBoard
 		
 		if(tile1 <1 | tile2<1 | tile1 >maxPos | tile2>maxPos)
 			throw new IllegalArgumentException("The input is out of range!");
+			
+		return neighborsOf(tile1).contains(tile2); //return true if one of tile1's neighbors is tile2
+	}
+	
+	/**
+	 * return the neighbors of a certain tile
+	 * @param tile the number of the tile
+	 * @return a list that contains the neighbors of the tile
+	 */
+	public List<Integer> neighborsOf(int tile1){
+	
+		int size = boardSize();
+		List<Integer> neighbors = new Vector<>();			
 		
-		//Checking all the four neighbors of tile1 - it dossn't mater if illegal value will be returned
-		int tLeft = tile1 % size - 1;
-		int tRight = tile1 % size + 1;
-		int tUp = tile1 - tile1 % size;
-		int tDown = tile1 + tile1 % size;
+		if(getTileCol(tile1) > 1)
+			neighbors.add(tile1 - 1); // Left
 		
-		//return true if one of tile1's neighbors is tile2
+		if(getTileCol(tile1) < size)
+			neighbors.add(tile1 + 1); // Right
 		
-		return tile2 == tLeft | tile2 == tRight | tile2 == tUp | tile2 == tDown;
+		if(getTileRow(tile1) > 1)
+			neighbors.add(tile1 - size); // Up
+		
+		if(getTileRow(tile1) < size)
+			neighbors.add(tile1 + size); // Down
+		
+		return neighbors;
 	}
 	
 	/**
@@ -229,5 +237,26 @@ public class Board implements IBoard
 		_boardMatrix[getTileRow(tile1)][getTileCol(tile1)] = tTile2;
 		_boardMatrix[getTileRow(tile2)][getTileCol(tile2)] = tTile1;
 	}
-
+	
+	/**
+	 * get the positing of the empty tile
+	 * @return he positing of the empty tile
+	 */
+	private int EmptyTilePosition(){
+		
+		int tcount = 1;
+		
+		for(ITile[] row : _boardMatrix)
+		{		
+			for(ITile tile : row)
+			{							
+				if(isTheEmptyTile(tile))
+					return tcount;
+				
+				tcount++;
+			}
+		}
+		
+		throw new IllegalStateException("The empty tile was nit found!");
+	}
 }
