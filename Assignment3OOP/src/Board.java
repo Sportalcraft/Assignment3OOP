@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.Vector;
+
 /**
  * This class represent a board
  */
@@ -21,7 +24,7 @@ public class Board implements IBoard
 	public Board(int size, ITile[][] tiles){
 		
 		if(size <= 0)
-			throw new IllegalArgumentException("size must be graqter than 0!");
+			throw new IllegalArgumentException("size must be greater than 0!");
 		
 		VerifyBoard(tiles); // Input checking for the board
 		
@@ -48,12 +51,16 @@ public class Board implements IBoard
 	@Override
 	public boolean isComplete() {
 			
+		int currentPlace = 1;
+		
 		for(ITile[] row : _boardMatrix)
 		{		
 			for(ITile tile : row)
-			{
-				if(!tile.isInPlace())
+			{							
+				if(tile.desirablePosition() != currentPlace)
 					return false;
+				
+				currentPlace++;
 			}
 		}
 		
@@ -74,7 +81,8 @@ public class Board implements IBoard
 	private void VerifyBoard(ITile[][] board) throws IllegalArgumentException
 	{
 		int size;
-		boolean emptyFound = false; // Exactly one empty tile is allowed
+		boolean emptyFound = false;							// Exactly one empty tile is allowed
+		List<Integer> usedDesirablePlaces = new Vector<>(); // save the Desirable already taken. two tiles can't go to the same place
 		
 		if(board == null)
 			throw new IllegalArgumentException("The board is null!");
@@ -99,17 +107,26 @@ public class Board implements IBoard
 				if(tile == null)
 					throw new IllegalArgumentException("The board have a null tile!");
 				
+				if(usedDesirablePlaces.contains(tile.desirablePosition()))
+					throw new IllegalArgumentException("The board have two tiles with the same desirable position!");
+				
+				usedDesirablePlaces.add(tile.desirablePosition());
 				
 				if(isTheEmptyTile(tile))
 				{
 					if(emptyFound)
 						throw new IllegalArgumentException("The board have more than one empty tiles!");
 					
+					if(tile.desirablePosition() != size*size) //not the right-down corner
+						throw new IllegalArgumentException("The desirable position of the empty tile is nit the right corner!");
+					
 					emptyFound = true;
 				}
 			}
 		}
 		
+		if(!emptyFound)
+			throw new IllegalArgumentException("The board have no empty tile!");		
 	}
 	
 	/**
@@ -145,7 +162,7 @@ public class Board implements IBoard
 	 * @return true if this position is not occupied by any tile, false otherwise
 	 */
 	private boolean isTheEmptyTile(ITile pos){
-		return pos instanceof EmptyTile & !(pos instanceof Tile);
+		return pos instanceof EmptyTile;
 	}
 	
 	/**
@@ -175,7 +192,7 @@ public class Board implements IBoard
 	}
 	
 	/**
-	 * cheak if to position are neighbors - have a common side
+	 * Check if to position are neighbors - have a common side
 	 * @param tile1 the number of the first tile
 	 * @param tile2 the number of the second tile
 	 * @return true if those tiles have a common side. false otherwise
@@ -208,9 +225,6 @@ public class Board implements IBoard
 		
 		ITile tTile1 =  _boardMatrix[getTileRow(tile1)][getTileCol(tile1)];
 		ITile tTile2 =  _boardMatrix[getTileRow(tile2)][getTileCol(tile2)];
-		
-		tTile1.moveTo(tile2);
-		tTile2.moveTo(tile1);
 		
 		_boardMatrix[getTileRow(tile1)][getTileCol(tile1)] = tTile2;
 		_boardMatrix[getTileRow(tile2)][getTileCol(tile2)] = tTile1;

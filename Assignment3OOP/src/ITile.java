@@ -15,26 +15,5 @@ public interface ITile
 	 * get the Image of this tile
 	 * @return the image of this tile
 	 */
-	Image content();
-	
-	
-	// In doubt :
-	
-	/**
-	 * Get the position of this tile in the board. a number between 1 and N^2-1 when N is the board size
-	 * @return tile position of this tile on the board
-	 */
-	int position();
-	
-	/**
-	 * Move this tile to a given place
-	 * @param newPos the place to move this tile to
-	 */
-	void moveTo(int newPos);
-		
-	/**
-	 * return true if this tile is on it's right place, false otherwise
-	 * @return id this tile on the right place
-	 */
-	boolean isInPlace();	
+	Image content();	
 }
