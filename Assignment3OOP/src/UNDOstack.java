@@ -3,7 +3,7 @@ import java.util.Stack;
 /**
  * This class enable undoing
  */
-public class UNDOstack 
+class UNDOstack 
 {
 	/**
 	 * holds the turn in LIFO order
@@ -39,22 +39,21 @@ public class UNDOstack
 	/**
 	 * Push a new turn to the stack
 	 * @param Tile the tile that were moved
-	 * @param Origin the position of the tile before it were moved
 	 */
-	public void push(int tile, int origin){
-		_turns.push(new Turn(tile, origin));
+	public void push(int tile){
+		_turns.push(new Turn(tile));
 	}
 	
 	/**
 	 * Undo the last operation
 	 */
-	public void Undo(){
+	public void undo(){
 		
 		if(!canUndo())
 			throw new IllegalStateException();
 		
 		Turn tLastTurn  =  _turns.pop();
-		_board.moveTile(tLastTurn.getTile(), tLastTurn.getOrigin());
+		_board.moveTile(tLastTurn.getTile());
 	}
 	
 	
@@ -70,22 +69,15 @@ public class UNDOstack
 		private int _tile;
 		
 		/**
-		 * 	The place this tile was at the start of the turn
-		 */
-		private int _originalPosition;
-		
-		/**
 		 * The constructor of turn
 		 * @param tile The tile that were moved this turn
-		 * @param originalPosition the position of the tile at the start of the turn
 		 */
-		public Turn(int tile, int originalPosition){
+		public Turn(int tile){
 		
-			if(tile <= 0 | originalPosition <= 0 )
+			if(tile <= 0)
 				throw new IllegalStateException("position must be greater than 0!");
 			
 			_tile = tile;
-			_originalPosition = originalPosition;
 		}
 		
 		/**
@@ -94,14 +86,6 @@ public class UNDOstack
 		 */
 		public int getTile(){
 			return _tile;
-		}
-		
-		/**
-		 * getter to the origin of the tile
-		 * @return The origin of the moved tile- The position at the beginning of the turn
-		 */
-		public int getOrigin(){
-			return _originalPosition;
 		}
 	}
 }

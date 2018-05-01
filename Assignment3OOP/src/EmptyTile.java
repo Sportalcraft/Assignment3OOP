@@ -1,6 +1,6 @@
 import java.awt.Image;
 
-public class EmptyTile extends AbstractTile
+class EmptyTile extends AbstractTile
 {
 	/**
 	 * The constructor of EmptyTile class

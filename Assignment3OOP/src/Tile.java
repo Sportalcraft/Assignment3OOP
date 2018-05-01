@@ -3,7 +3,7 @@ import java.awt.Image;
 /**
  * This class represent a tile
  */
-public class Tile extends AbstractTile
+class Tile extends AbstractTile
 {
 	/**
 	 * The Image of this tile

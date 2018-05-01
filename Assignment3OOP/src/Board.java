@@ -1,11 +1,11 @@
+import java.awt.Image;
 import java.util.List;
-import java.util.Random;
 import java.util.Vector;
 
 /**
  * This class represent a board
  */
-public class Board implements IBoard
+class Board implements IBoard
 {
 	/**
 	 * holds the tiles if this board
@@ -17,12 +17,35 @@ public class Board implements IBoard
 	 */
 	private int _moves; 
 	
-	public Board(ITile[][] tiles){
+	/**
+	 * The image that should go to the empty tile when the borad is solved
+	 */
+	private Image _picOfEmtyTile;
+	
+	/**
+	 * Does this board was solved already?
+	 */
+	private boolean _solved;
+	
+	/**
+	 * The constructor
+	 * @param tiles the boards
+	 * @param picOfEmpty the image that should go to the empty tile
+	 */
+	public Board(ITile[][] tiles, Image picOfEmpty){
+		
+		if(picOfEmpty == null)
+			throw new IllegalArgumentException("The image for the empty tile is null!"); 
 		
 		VerifyBoard(tiles); // Input checking for the board
 		
 		_boardMatrix = tiles;
-		_moves = 0;
+		_picOfEmtyTile = picOfEmpty;
+		_moves = 0;		
+		_solved = false;
+		
+		if(isComplete())
+			throw new IllegalArgumentException("The reciving boaard is already solved!"); 
 	}
 	
 	@Override
@@ -31,19 +54,36 @@ public class Board implements IBoard
 	}
 
 	@Override
-	public void moveTile(int tileNum, int newPos) {
+	public void moveTile(int tile) {
 		
-		if(!canMove(tileNum, newPos))
-			throw new IllegalArgumentException("This operation could not be done!");
+		if(isLocked())
+			throw new IllegalStateException("A change cannot be made to this board since it is already solved!"); 
 		
-		swap(tileNum, newPos);
-		_moves++; // A move was made
+		List<Integer> neighbors = neighborsOf(tile);
+		
+		for(int neighbor : neighbors)
+		{
+			if(isTheEmptyTile(neighbor))
+			{
+				swap(tile, neighbor);
+				_moves++; // A move was made
+				
+				isComplete(); //Lock if solved
+				
+				return;
+			}
+		}
+		
+		throw new IllegalArgumentException("This tile is not a neighbor of the empty tile, and therefore, could not be moved!"); 
 	}
 
 	@Override
 	public boolean isComplete() {
 			
 		int currentPlace = 1;
+		
+		if(isLocked())
+			return true;
 		
 		for(ITile[] row : _boardMatrix)
 		{		
@@ -56,12 +96,36 @@ public class Board implements IBoard
 			}
 		}
 		
+		lock(); 	 // Lock the board - it is solved
 		return true; // All tiles in place
 	}
 
 	@Override
 	public int moves() {
 		return _moves;
+	}
+	
+	@Override
+	public ITile[][] boardMap() {
+		return _boardMatrix;
+	}
+	
+	/**
+	 * check if this board can be changed
+	 * @return true if this board was not solved yet, false otherwise
+	 */
+	private boolean isLocked(){
+		return !_solved;
+	}
+	
+
+	/**
+	 * lock this board to changes
+	 */
+	private void lock(){
+		_solved = true;
+		int size = boardSize();
+		_boardMatrix[size][size] = new Tile(size*size, _picOfEmtyTile); //Change th empty tile to a normal tile with the right picture
 	}
 	
 	/**
@@ -117,7 +181,7 @@ public class Board implements IBoard
 		}
 		
 		if(!emptyFound)
-			throw new IllegalArgumentException("The board have no empty tile!");		
+			throw new IllegalArgumentException("The board have no empty tile!");
 	}
 	
 	/**
@@ -166,60 +230,29 @@ public class Board implements IBoard
 	}
 	
 	/**
-	 * check if a tile can be move from old place to a new place
-	 * @param oldPos the current position of the tile
-	 * @param newPos the position to move the tile to
-	 * @return true if the transition can be done
-	 */
-	private  boolean canMove(int oldPos, int newPos){	
-		
-		if(isTheEmptyTile(oldPos))		
-		return false; //Can't move the empty tile
-		
-		if(!isTheEmptyTile(newPos))
-			return false; //Can move only to the empty tile
-		
-		return AreNeighbors(oldPos, newPos); //Can move only if those position are touching each other
-	}
-	
-	/**
-	 * Check if to position are neighbors - have a common side
-	 * @param tile1 the number of the first tile
-	 * @param tile2 the number of the second tile
-	 * @return true if those tiles have a common side. false otherwise
-	 */
-	private boolean AreNeighbors(int tile1, int tile2){
-		
-		int size =  boardSize();
-		int maxPos =size*size;
-		
-		if(tile1 <1 | tile2<1 | tile1 >maxPos | tile2>maxPos)
-			throw new IllegalArgumentException("The input is out of range!");
-			
-		return neighborsOf(tile1).contains(tile2); //return true if one of tile1's neighbors is tile2
-	}
-	
-	/**
 	 * return the neighbors of a certain tile
 	 * @param tile the number of the tile
 	 * @return a list that contains the neighbors of the tile
 	 */
-	public List<Integer> neighborsOf(int tile1){
-	
+	private List<Integer> neighborsOf(int tile){
+			
 		int size = boardSize();
-		List<Integer> neighbors = new Vector<>();			
+		List<Integer> neighbors = new Vector<>();	
 		
-		if(getTileCol(tile1) > 1)
-			neighbors.add(tile1 - 1); // Left
+		if(tile < 1 | tile  > size*size )
+			throw new IllegalArgumentException("The input is out of range!");
 		
-		if(getTileCol(tile1) < size)
-			neighbors.add(tile1 + 1); // Right
+		if(getTileCol(tile) > 1)
+			neighbors.add(tile - 1); // Left
 		
-		if(getTileRow(tile1) > 1)
-			neighbors.add(tile1 - size); // Up
+		if(getTileCol(tile) < size)
+			neighbors.add(tile + 1); // Right
 		
-		if(getTileRow(tile1) < size)
-			neighbors.add(tile1 + size); // Down
+		if(getTileRow(tile) > 1)
+			neighbors.add(tile - size); // Up
+		
+		if(getTileRow(tile) < size)
+			neighbors.add(tile + size); // Down
 		
 		return neighbors;
 	}
@@ -236,27 +269,5 @@ public class Board implements IBoard
 		
 		_boardMatrix[getTileRow(tile1)][getTileCol(tile1)] = tTile2;
 		_boardMatrix[getTileRow(tile2)][getTileCol(tile2)] = tTile1;
-	}
-	
-	/**
-	 * get the positing of the empty tile
-	 * @return he positing of the empty tile
-	 */
-	private int EmptyTilePosition(){
-		
-		int tcount = 1;
-		
-		for(ITile[] row : _boardMatrix)
-		{		
-			for(ITile tile : row)
-			{							
-				if(isTheEmptyTile(tile))
-					return tcount;
-				
-				tcount++;
-			}
-		}
-		
-		throw new IllegalStateException("The empty tile was nit found!");
 	}
 }

@@ -3,7 +3,7 @@ import java.awt.Image;
 /**
  * This class represent a Tile on the board
  */
-public abstract class AbstractTile implements ITile
+abstract class AbstractTile implements ITile
 {		
 	/**
 	 * The desirable position of this tile - the position on a solved board

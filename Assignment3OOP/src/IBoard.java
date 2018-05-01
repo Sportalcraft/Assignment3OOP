@@ -1,7 +1,7 @@
 /**
  * This interface represent the board
  */
-public interface IBoard 
+interface IBoard 
 {
 	/**
 	 * check what is the size of this board
@@ -10,11 +10,10 @@ public interface IBoard
 	int boardSize();
 	
 	/**
-	 * Move a tile to a given place
-	 * @param tileNum The number of the tile to move
-	 * @param newPos The new position of the tile
+	 * Move a tile to a the empty board, if possible
+	 * @param tile The number of the tile to move
 	 */
-	void moveTile(int tileNum, int newPos);
+	void moveTile(int tile);
 	
 	/**
 	 * check if the board is solved
@@ -27,4 +26,10 @@ public interface IBoard
 	 * @returnThe amount of moves that were made in this board
 	 */
 	int moves();
+	
+	/**
+	 * get the tiles of the board in their order
+	 * @return the board of tiles
+	 */
+	ITile[][] boardMap();
 }
