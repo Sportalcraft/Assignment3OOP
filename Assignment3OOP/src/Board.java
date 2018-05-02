@@ -13,11 +13,6 @@ class Board implements IBoard
 	private ITile[][] _boardMatrix;
 	
 	/**
-	 * The amount of moves that were made on this board
-	 */
-	private int _moves; 
-	
-	/**
 	 * The image that should go to the empty tile when the borad is solved
 	 */
 	private Image _picOfEmtyTile;
@@ -40,8 +35,7 @@ class Board implements IBoard
 		VerifyBoard(tiles); // Input checking for the board
 		
 		_boardMatrix = tiles;
-		_picOfEmtyTile = picOfEmpty;
-		_moves = 0;		
+		_picOfEmtyTile = picOfEmpty;	
 		_solved = false;
 		
 		if(isComplete())
@@ -65,11 +59,8 @@ class Board implements IBoard
 		{
 			if(isTheEmptyTile(neighbor))
 			{
-				swap(tile, neighbor);
-				_moves++; // A move was made
-				
-				isComplete(); //Lock if solved
-				
+				swap(tile, neighbor);						
+				isComplete(); //Lock if solved				
 				return;
 			}
 		}
@@ -98,11 +89,6 @@ class Board implements IBoard
 		
 		lock(); 	 // Lock the board - it is solved
 		return true; // All tiles in place
-	}
-
-	@Override
-	public int moves() {
-		return _moves;
 	}
 	
 	@Override

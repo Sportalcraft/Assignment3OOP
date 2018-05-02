@@ -14,6 +14,11 @@ public class Game implements IGame {
 	private UNDOstack _undo;
 	
 	/**
+	 * The amount of moves that were made on this game
+	 */
+	private int _moves; 
+	
+	/**
 	 * A constructor
 	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
 	 * @param boardOrder the order to shuffle the board in
@@ -25,6 +30,7 @@ public class Game implements IGame {
 		
 		_board = BuildBoard(images, boardOrder);
 		_undo = new UNDOstack(_board);
+		_moves = 0;
 	}
 	
 	/**
@@ -46,6 +52,11 @@ public class Game implements IGame {
 		_undo.undo();		
 	}
 	
+	@Override
+	public int moves() {
+		return _moves;
+	}
+
 	
 	@Override
 	public int boardSize() {
@@ -55,17 +66,13 @@ public class Game implements IGame {
 	@Override
 	public void moveTile(int tile) {
 		_board.moveTile(tile);
-		_undo.push(tile); //Save this turn to the undo stack
+		_undo.push(tile); // Save this turn to the undo stack
+		_moves++; 		  // A move was made
 	}
 
 	@Override
 	public boolean isComplete() {
 		return _board.isComplete();
-	}
-
-	@Override
-	public int moves() {
-		return _board.moves();
 	}
 
 	@Override

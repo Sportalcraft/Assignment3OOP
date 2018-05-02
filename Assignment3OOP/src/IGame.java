@@ -14,5 +14,10 @@ public interface IGame extends IBoard {
 	 * Undo the last move
 	 */
 	void undo();
-
+	
+	/**
+	 * get the amount of moves that were made in this board
+	 * @returnThe amount of moves that were made in this board
+	 */
+	int moves();
 }

@@ -22,12 +22,6 @@ interface IBoard
 	boolean isComplete();
 	
 	/**
-	 * get the amount of moves that were made in this board
-	 * @returnThe amount of moves that were made in this board
-	 */
-	int moves();
-	
-	/**
 	 * get the tiles of the board in their order
 	 * @return the board of tiles
 	 */
