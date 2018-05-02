@@ -1,4 +1,4 @@
-import java.awt.Image;
+package GameFrame;
 
 class EmptyTile extends AbstractTile
 {
@@ -11,7 +11,7 @@ class EmptyTile extends AbstractTile
 	}
 
 	@Override
-	public Image content() {
+	public String content() {
 		return null; //No Image
 	}
 

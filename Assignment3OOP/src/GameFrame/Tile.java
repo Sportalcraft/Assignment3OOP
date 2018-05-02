@@ -1,4 +1,4 @@
-import java.awt.Image;
+package GameFrame;
 
 /**
  * This class represent a tile
@@ -8,14 +8,14 @@ class Tile extends AbstractTile
 	/**
 	 * The Image of this tile
 	 */
-	private Image _content;
+	private String _content;
 	
 	/**
 	 * The constructor of Tile class
 	 * @param desirablePosition the position if this tile on a solved board
 	 * @param content the image of this tile
 	 */
-	public Tile(int desirablePosition, Image content)
+	public Tile(int desirablePosition, String content)
 	{
 		super(desirablePosition);
 		
@@ -26,7 +26,7 @@ class Tile extends AbstractTile
 	}
 	
 	@Override
-	public Image content() {
+	public String content() {
 		return _content;
 	}
 }

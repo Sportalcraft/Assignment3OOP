@@ -1,5 +1,7 @@
-import java.awt.Image;
+package GameFrame;
+
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -15,7 +17,7 @@ class Board implements IBoard
 	/**
 	 * The image that should go to the empty tile when the borad is solved
 	 */
-	private Image _picOfEmtyTile;
+	private String _picOfEmtyTile;
 	
 	/**
 	 * Does this board was solved already?
@@ -23,11 +25,12 @@ class Board implements IBoard
 	private boolean _solved;
 	
 	/**
-	 * The constructor
+	 * A constructor
 	 * @param tiles the boards
 	 * @param picOfEmpty the image that should go to the empty tile
+	 * @param shuffleRandonly true of this board should shuffle itself, false otherwise
 	 */
-	public Board(ITile[][] tiles, Image picOfEmpty){
+	public Board(ITile[][] tiles, String picOfEmpty, boolean shuffleRandonly){
 		
 		if(picOfEmpty == null)
 			throw new IllegalArgumentException("The image for the empty tile is null!"); 
@@ -38,8 +41,20 @@ class Board implements IBoard
 		_picOfEmtyTile = picOfEmpty;	
 		_solved = false;
 		
+		if(shuffleRandonly)
+			shuffle();
+		
 		if(isComplete())
 			throw new IllegalArgumentException("The reciving boaard is already solved!"); 
+	}
+	
+	/**
+	 * A constructor
+	 * @param tiles the boards
+	 * @param picOfEmpty the image that should go to the empty tile
+	 */
+	public Board(ITile[][] tiles, String picOfEmpty){
+		this(tiles, picOfEmpty, false);
 	}
 	
 	@Override
@@ -255,5 +270,32 @@ class Board implements IBoard
 		
 		_boardMatrix[getTileRow(tile1)][getTileCol(tile1)] = tTile2;
 		_boardMatrix[getTileRow(tile2)][getTileCol(tile2)] = tTile1;
+	}
+	
+	/**
+	 * Randomly shuffle The board
+	 */
+	private void shuffle() {
+		
+		int empty = boardSize()* boardSize();
+		
+		if(!isTheEmptyTile(empty))
+			throw new IllegalArgumentException("This board is alreadt shuffuled!");
+		
+		Random rnd = new Random();
+		List<Integer> neighbors;
+		int swapWith;
+		int numOfShuffles = rnd.nextInt(boardSize()*boardSize());        									   // number of times an automatic move will be made
+		numOfShuffles = Math.max(13 + boardSize()*boardSize()/7 + rnd.nextInt(boardSize()%3), numOfShuffles);  // if numOfShuffles =1 it will be too essay
+		
+		for(int i=1; i<= numOfShuffles; i++)
+		{
+			neighbors = neighborsOf(empty);
+			swapWith = neighbors.get(rnd.nextInt(neighbors.size())); //Getting a random neighbor of the empty tile
+			
+			swap(swapWith, empty);			
+			empty = swapWith; // Empty Tile moved
+		}	
+		
 	}
 }

@@ -1,5 +1,6 @@
-import java.awt.Image;
+package GameFrame;
 
+import java.io.IOException;
 
 public class Game implements IGame {
 	
@@ -11,7 +12,7 @@ public class Game implements IGame {
 	/**
 	 * The undo stack that track this game
 	 */
-	private UNDOstack _undo;
+	private undoStack _undo;
 	
 	/**
 	 * The amount of moves that were made on this game
@@ -23,22 +24,36 @@ public class Game implements IGame {
 	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
 	 * @param boardOrder the order to shuffle the board in
 	 */
-	public Game(Image[][] images, Integer[][] boardOrder){
+	public Game(String[][] images, Integer[][] boardOrder){
 		
 		Verify2DArray(images);
 		Verify2DArray(boardOrder);
 		
 		_board = BuildBoard(images, boardOrder);
-		_undo = new UNDOstack(_board);
+		_undo = new undoStack(_board);
 		_moves = 0;
 	}
 	
 	/**
+	 * A constructor that randomly shuffle the board
+	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
+	 */
+	public Game(String[][] images){
+		
+		Verify2DArray(images);
+		
+		_board = new Board(BuildBoardMap(images), images[images.length][images.length], true);
+		_undo = new undoStack(_board);
+		_moves = 0;
+	}
+
+	/**
 	 * A constructor
 	 * @param image the image of the game
 	 * @param boardOrder the order to shuffle the board in
+	 * @throws IOException 
 	 */
-	public Game(Image image, Integer[][] boardOrder){
+	public Game(String image, Integer[][] boardOrder) {
 		this(ImageHandler.squareCut(image, boardOrder.length),boardOrder);
 	}
 	
@@ -86,14 +101,14 @@ public class Game implements IGame {
 	 * Build the board of the game
 	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
 	 * @param boardOrder the order to shuffle the board in
-	 * @return an a board that is built according to the instructions
+	 * @return a board that is built according to the instructions
 	 */
-	private IBoard BuildBoard(Image[][] images, Integer[][] boardOrder)
+	private IBoard BuildBoard(String[][] images, Integer[][] boardOrder)
 	{
 		int size = images.length;
 		ITile[][] boardMap = new ITile[size][size];
 		int desirablePosition;
-		Image imageOfEmty = null;
+		String imageOfEmty = null;
 		
 		for(int row = 1; row< size; row ++)
 		{
@@ -115,13 +130,32 @@ public class Game implements IGame {
 	}
 	
 	/**
+	 * Build the board map of the game
+	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
+	 * @return a board map that is built by the order of images
+	 */
+	private ITile[][] BuildBoardMap(String[][] images) {
+		
+		int size = images.length;
+		 ITile[][] map = new  ITile[size][size];
+		
+		for(int i = 0; i< size; i++){
+			for(int j = 0; j< size; j++){
+				map[i][j] = new Tile(i*size +j, images[i][j]);
+			}
+		}
+		map[size][size] = new EmptyTile(size*size);
+		
+		return map;
+	}
+	
+	/**
 	 * verify if a 2D array is a matrix
 	 * @param arr the array to check
 	 * @throws IllegalArgumentException if not legal 2D matrix array
 	 */
 	private <T> void Verify2DArray(T[][] arr) throws IllegalArgumentException {
 		
-
 		if(arr == null)
 			throw new IllegalArgumentException("The board is null!");
 		

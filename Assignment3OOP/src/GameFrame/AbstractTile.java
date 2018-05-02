@@ -1,4 +1,4 @@
-import java.awt.Image;
+package GameFrame;
 
 /**
  * This class represent a Tile on the board
@@ -29,6 +29,6 @@ abstract class AbstractTile implements ITile
 	}
 	
 	@Override
-	public abstract Image content();
+	public abstract String content();
 
 }

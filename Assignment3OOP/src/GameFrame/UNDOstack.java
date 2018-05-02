@@ -1,9 +1,11 @@
+package GameFrame;
+
 import java.util.Stack;
 
 /**
  * This class enable undoing
  */
-class UNDOstack 
+class undoStack 
 {
 	/**
 	 * holds the turn in LIFO order
@@ -19,7 +21,7 @@ class UNDOstack
 	 * The constructor of the UNDO class
 	 * @param board the board this UNDO is tracking
 	 */
-	public UNDOstack(IBoard board){
+	public undoStack(IBoard board){
 	
 		if(board== null)
 			throw new IllegalArgumentException("recived a null board!");

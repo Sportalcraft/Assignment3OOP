@@ -1,3 +1,4 @@
+package GameFrame;
 
 /**
  * This interface represent the game
@@ -11,7 +12,7 @@ public interface IGame extends IBoard {
 	boolean undoable();
 	
 	/**
-	 * Undo the last move
+	 * undo the last move
 	 */
 	void undo();
 	

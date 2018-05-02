@@ -1,3 +1,5 @@
+package GameFrame;
+
 /**
  * This interface represent the board
  */
