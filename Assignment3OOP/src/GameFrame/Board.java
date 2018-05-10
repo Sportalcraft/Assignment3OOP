@@ -276,8 +276,8 @@ class Board implements IBoard
 		Random rnd = new Random();
 		List<Integer> neighbors;
 		int swapWith;
-		int numOfShuffles = rnd.nextInt(boardSize()*boardSize());        									   // number of times an automatic move will be made
-		numOfShuffles = Math.max(13 + boardSize()*boardSize()/7 + rnd.nextInt(boardSize()%3 +1), numOfShuffles);  // if numOfShuffles =1 it will be too essay
+		int numOfShuffles = rnd.nextInt(boardSize()*boardSize()*boardSize()*2);        							   // number of times an automatic move will be made
+		numOfShuffles = Math.max(100 + boardSize()*boardSize()/7 + rnd.nextInt(boardSize()%3 +1), numOfShuffles);  // if numOfShuffles =1 it will be too essay
 		
 		for(int i=1; i<= numOfShuffles; i++)
 		{
