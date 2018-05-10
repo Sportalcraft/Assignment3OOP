@@ -36,6 +36,41 @@ public class GameFrame extends JFrame {
 		this(new BoardPanel(new Board(BuildBoardMap(images), true)));
 		Verify2DArray(images);
 	}
+	
+	/**
+	 * A constructor to build the board from saved images
+	 * @param size
+	 * @param pic
+	 */
+	public GameFrame(Sizes size, SavedImages pic) {
+		this(ImageHandler.BuildImagesMap(size.getSize(), pic.toString()));
+	}
+	
+	/**
+	 * Saved images
+	 */
+	public enum SavedImages
+	{
+		cat , cyber, sushi;
+	}
+	
+	/**
+	 * Saved images
+	 */
+	public enum Sizes
+	{	
+		THREE(3), FOUR(4), FIVE(5);
+		
+		private final int _size;
+		
+		Sizes(int size) {
+			_size = size;
+		}
+		
+		public int getSize() {
+			return _size;
+		}
+	}	
 
 	/**
 	 *  * A constructor

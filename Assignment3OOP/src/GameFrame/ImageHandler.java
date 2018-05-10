@@ -26,6 +26,37 @@ class ImageHandler {
 	}
 	
 	/**
+	 * return an 2D array of the picture that are already saved, by size and name
+	 * @param size the size of the board we want
+	 * @param pic the name of the picture we want
+	 * @return a 2d array of the paths to the requested images
+	 */
+	public static String[][] BuildImagesMap(int size, String pic) {	
+		
+		if(size < 3)
+			throw new IllegalArgumentException("Illegal size!");
+		
+		if(pic == null)
+			throw new IllegalArgumentException("path can't be null!");
+		
+		String[][] temp = new String[size][size];		
+		File tFile; 
+		
+		for(int i = 0; i<size; i++)
+		{
+			for(int j = 0; j<size; j++)
+			{
+				int t = size*i +j +1;
+				temp[i][j] = "images/" + pic +"/"+ pic +"_" + size + "x" + size + "/" + t + ".jpeg";
+				
+				tFile = new File(temp[i][j]);
+
+			}
+		}
+		return temp;
+	}
+	
+	/**
 	 * Cut an image to chunks (with the specified amount of pictures in the rows and columns)
 	 * @param toCut the image to cut
 	 * @param rows the amount of images on a row

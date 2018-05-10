@@ -32,12 +32,21 @@ class Board implements IBoard
 		_boardMatrix = tiles;	
 		_solved = false;
 		
-		if(shuffleRandonly){
-			shuffle();
-		}
+		boolean shuffled = false;	
 		
-		if(isComplete())
-			throw new IllegalArgumentException("The boaard is already solved!"); 
+		if(shuffleRandonly)
+		{			
+			while(!shuffled) // just to make sure the board is truly shuffled
+			{		
+				shuffle();		
+				shuffled = !isComplete();
+			}
+		}
+		else 
+		{
+			if(isComplete())
+				throw new IllegalArgumentException("The boaard is already solved!"); 
+		}
 	}
 	
 	/**
@@ -128,13 +137,17 @@ class Board implements IBoard
 	private void VerifyBoard(ITile[][] board) throws IllegalArgumentException
 	{
 		int size;
+		int min; //We want to verify that all tiles are in the range of the board
+		int max;
 		boolean emptyFound = false;							// Exactly one empty tile is allowed
 		List<Integer> usedDesirablePlaces = new Vector<>(); // save the Desirable already taken. two tiles can't go to the same place
-		
+				
 		if(board == null)
 			throw new IllegalArgumentException("The board is null!");
 		
 		size = board.length;
+		max = -1;
+		min = size*size + 5;
 		
 		if(size == 0)
 			throw new IllegalArgumentException("The board is empty!");
@@ -158,6 +171,8 @@ class Board implements IBoard
 					throw new IllegalArgumentException("The board have two tiles with the same desirable position!");
 				
 				usedDesirablePlaces.add(tile.desirablePosition());
+				min = Math.min(min, tile.desirablePosition());
+				max = Math.max(max, tile.desirablePosition());
 				
 				if(isTheEmptyTile(tile))
 				{
@@ -174,6 +189,9 @@ class Board implements IBoard
 		
 		if(!emptyFound)
 			throw new IllegalArgumentException("The board have no empty tile!");
+		
+		if(min != 0 | max != size*size - 1)
+			throw new IllegalArgumentException("The tiles on this board are not in it's range!!");
 	}
 	
 	/**
