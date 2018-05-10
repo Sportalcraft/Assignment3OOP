@@ -36,6 +36,8 @@ public class BoardPanel extends JPanel implements ActionListener {
 		
 		setSize(new Dimension(PANEL_SIZE,PANEL_SIZE));
 		
+		String file;
+		
 		_board = boad;		
 		_buttuns = new JButton[_board.boardSize()][_board.boardSize()];
 		_undo = new Stack<>();
@@ -45,10 +47,10 @@ public class BoardPanel extends JPanel implements ActionListener {
 		{
 			for(int j = 0; j< _buttuns.length; j++)
 			{	
-				String s = _board.boardMap()[i][j].content();
+			   file = _board.boardMap()[i][j].content();
 				
-				if(s != null)
-					_buttuns[i][j] = new JButton( new ImageIcon(BoardPanel.class.getResource(s)));
+				if(file != null)
+					_buttuns[i][j] = new JButton( new ImageIcon(BoardPanel.class.getResource(file)));
 				else
 					_buttuns[i][j] = new JButton( new ImageIcon());
 				
@@ -120,7 +122,8 @@ public class BoardPanel extends JPanel implements ActionListener {
 		if(isComplete())
 		{
 			int size = _board.boardSize()-1;
-			_buttuns[size][size].setIcon(new ImageIcon(_board.boardMap()[size][size].content()));
+			String file = _board.boardMap()[size][size].content();
+			_buttuns[size][size].setIcon(new ImageIcon(BoardPanel.class.getResource(file)));
 		}
 	}
 }
