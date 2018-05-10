@@ -11,16 +11,26 @@ abstract class AbstractTile implements ITile
 	private int _desirablePosition;
 	
 	/**
+	 * The Image of this tile
+	 */
+	private String _content;
+	
+	/**
 	 * The constructor of AbstractTile class
 	 * @param position the position if this tile
 	 * @param desirablePosition the position if this tile on a solved board
+	  * @param content the image of this tile
 	 */
-	public AbstractTile(int desirablePosition)
+	public AbstractTile(int desirablePosition,  String content)
 	{
-		if(desirablePosition <= 0)
-			throw new IllegalArgumentException("position must be graqter than 0!");
+		if(desirablePosition < 0)
+			throw new IllegalArgumentException("position must be atleast 0!");
+		
+		if(content == null)
+			throw new IllegalArgumentException("recived null as an image!");
 		
 		_desirablePosition = desirablePosition;
+		_content = content;
 	}
 	
 	@Override
@@ -29,6 +39,8 @@ abstract class AbstractTile implements ITile
 	}
 	
 	@Override
-	public abstract String content();
+	public String content() {
+		return _content;
+	}
 
 }

@@ -14,8 +14,9 @@ interface IBoard
 	/**
 	 * Move a tile to a the empty board, if possible
 	 * @param tile The number of the tile to move
+	 * @return the tile it was swapped with
 	 */
-	void moveTile(int tile);
+	int moveTile(int tile);
 	
 	/**
 	 * check if the board is solved

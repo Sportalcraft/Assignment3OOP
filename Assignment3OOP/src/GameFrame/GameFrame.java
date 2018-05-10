@@ -1,98 +1,62 @@
 package GameFrame;
 
 import java.io.IOException;
+import java.util.Stack;
 
-public class Game implements IGame {
+import javax.swing.JFrame;
+
+public class GameFrame extends JFrame {
 	
 	/**
 	 * The board of this game
 	 */
-	private IBoard _board;
-	
-	/**
-	 * The undo stack that track this game
-	 */
-	private undoStack _undo;
-	
-	/**
-	 * The amount of moves that were made on this game
-	 */
-	private int _moves; 
+	private BoardPanel _board;
+	 
 	
 	/**
 	 * A constructor
 	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
 	 * @param boardOrder the order to shuffle the board in
 	 */
-	public Game(String[][] images, Integer[][] boardOrder){
+	public GameFrame(String[][] images, Integer[][] boardOrder){
+		
+		this(BuildBoard(images, boardOrder));
 		
 		Verify2DArray(images);
 		Verify2DArray(boardOrder);
-		
-		_board = BuildBoard(images, boardOrder);
-		_undo = new undoStack(_board);
-		_moves = 0;
-	}
+
+	}	
 	
 	/**
 	 * A constructor that randomly shuffle the board
 	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
 	 */
-	public Game(String[][] images){
+	public GameFrame(String[][] images){
 		
+		this(new BoardPanel(new Board(BuildBoardMap(images), true)));
 		Verify2DArray(images);
-		
-		_board = new Board(BuildBoardMap(images), images[images.length][images.length], true);
-		_undo = new undoStack(_board);
-		_moves = 0;
 	}
 
 	/**
-	 * A constructor
-	 * @param image the image of the game
-	 * @param boardOrder the order to shuffle the board in
-	 * @throws IOException 
+	 *  * A constructor
+	 * @param board the board
 	 */
-	public Game(String image, Integer[][] boardOrder) {
-		this(ImageHandler.squareCut(image, boardOrder.length),boardOrder);
-	}
-	
-	@Override
-	public boolean undoable() {
-		return _undo.canUndo();
+	private GameFrame(BoardPanel board) {		
+		
+		super("Game");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+		getContentPane().add(board);
+		
+		pack();
 	}
 
-	@Override
 	public void undo() {
-		_undo.undo();		
-	}
-	
-	@Override
-	public int moves() {
-		return _moves;
+		_board.undo();		
 	}
 
-	
-	@Override
-	public int boardSize() {
-		return _board.boardSize();
-	}
-
-	@Override
-	public void moveTile(int tile) {
-		_board.moveTile(tile);
-		_undo.push(tile); // Save this turn to the undo stack
-		_moves++; 		  // A move was made
-	}
-
-	@Override
 	public boolean isComplete() {
 		return _board.isComplete();
-	}
-
-	@Override
-	public ITile[][] boardMap() {
-		return _board.boardMap();
 	}
 	
 	
@@ -103,12 +67,11 @@ public class Game implements IGame {
 	 * @param boardOrder the order to shuffle the board in
 	 * @return a board that is built according to the instructions
 	 */
-	private IBoard BuildBoard(String[][] images, Integer[][] boardOrder)
+	private static BoardPanel BuildBoard(String[][] images, Integer[][] boardOrder)
 	{
-		int size = images.length;
+		int size = boardOrder.length;
 		ITile[][] boardMap = new ITile[size][size];
 		int desirablePosition;
-		String imageOfEmty = null;
 		
 		for(int row = 1; row< size; row ++)
 		{
@@ -116,17 +79,14 @@ public class Game implements IGame {
 			{
 				desirablePosition = boardOrder[row][col];
 				
-				if(desirablePosition == 0) //EmptyTile
-				{
-					boardMap[row][col] = new EmptyTile(desirablePosition);
-					imageOfEmty = images[desirablePosition/size][desirablePosition%size];
-				}
+				if(desirablePosition == size*size-1) //EmptyTile
+					boardMap[row][col] = new EmptyTile(desirablePosition, images[desirablePosition/size][desirablePosition%size]);
 				else
 					boardMap[row][col] = new Tile(desirablePosition, images[desirablePosition/size][desirablePosition%size]);
 			}
 		}
 		
-		return new Board(boardMap, imageOfEmty);
+		return new BoardPanel(new Board(boardMap));
 	}
 	
 	/**
@@ -134,17 +94,17 @@ public class Game implements IGame {
 	 * @param images the images of the tiles IN ORDER (1-N*N), including the empty tile image
 	 * @return a board map that is built by the order of images
 	 */
-	private ITile[][] BuildBoardMap(String[][] images) {
+	private static ITile[][] BuildBoardMap(String[][] images) {
 		
 		int size = images.length;
 		 ITile[][] map = new  ITile[size][size];
 		
 		for(int i = 0; i< size; i++){
 			for(int j = 0; j< size; j++){
-				map[i][j] = new Tile(i*size +j, images[i][j]);
+				map[i][j] = new Tile(i*size + j, images[i][j]);
 			}
 		}
-		map[size][size] = new EmptyTile(size*size);
+		map[size-1][size-1] = new EmptyTile(size*size-1, images[size-1][size-1]);
 		
 		return map;
 	}

@@ -15,11 +15,6 @@ class Board implements IBoard
 	private ITile[][] _boardMatrix;
 	
 	/**
-	 * The image that should go to the empty tile when the borad is solved
-	 */
-	private String _picOfEmtyTile;
-	
-	/**
 	 * Does this board was solved already?
 	 */
 	private boolean _solved;
@@ -30,22 +25,19 @@ class Board implements IBoard
 	 * @param picOfEmpty the image that should go to the empty tile
 	 * @param shuffleRandonly true of this board should shuffle itself, false otherwise
 	 */
-	public Board(ITile[][] tiles, String picOfEmpty, boolean shuffleRandonly){
-		
-		if(picOfEmpty == null)
-			throw new IllegalArgumentException("The image for the empty tile is null!"); 
-		
+	public Board(ITile[][] tiles, boolean shuffleRandonly){
+			
 		VerifyBoard(tiles); // Input checking for the board
 		
-		_boardMatrix = tiles;
-		_picOfEmtyTile = picOfEmpty;	
+		_boardMatrix = tiles;	
 		_solved = false;
 		
-		if(shuffleRandonly)
+		if(shuffleRandonly){
 			shuffle();
+		}
 		
 		if(isComplete())
-			throw new IllegalArgumentException("The reciving boaard is already solved!"); 
+			throw new IllegalArgumentException("The boaard is already solved!"); 
 	}
 	
 	/**
@@ -53,8 +45,8 @@ class Board implements IBoard
 	 * @param tiles the boards
 	 * @param picOfEmpty the image that should go to the empty tile
 	 */
-	public Board(ITile[][] tiles, String picOfEmpty){
-		this(tiles, picOfEmpty, false);
+	public Board(ITile[][] tiles){
+		this(tiles, false);
 	}
 	
 	@Override
@@ -63,7 +55,7 @@ class Board implements IBoard
 	}
 
 	@Override
-	public void moveTile(int tile) {
+	public int moveTile(int tile) {
 		
 		if(isLocked())
 			throw new IllegalStateException("A change cannot be made to this board since it is already solved!"); 
@@ -76,7 +68,7 @@ class Board implements IBoard
 			{
 				swap(tile, neighbor);						
 				isComplete(); //Lock if solved				
-				return;
+				return neighbor;
 			}
 		}
 		
@@ -86,7 +78,7 @@ class Board implements IBoard
 	@Override
 	public boolean isComplete() {
 			
-		int currentPlace = 1;
+		int currentPlace = 0;
 		
 		if(isLocked())
 			return true;
@@ -116,17 +108,16 @@ class Board implements IBoard
 	 * @return true if this board was not solved yet, false otherwise
 	 */
 	private boolean isLocked(){
-		return !_solved;
+		return _solved;
 	}
 	
-
 	/**
 	 * lock this board to changes
 	 */
 	private void lock(){
 		_solved = true;
-		int size = boardSize();
-		_boardMatrix[size][size] = new Tile(size*size, _picOfEmtyTile); //Change th empty tile to a normal tile with the right picture
+		int size = boardSize() - 1;
+		((EmptyTile)_boardMatrix[size][size]).gameEnded();
 	}
 	
 	/**
@@ -173,7 +164,7 @@ class Board implements IBoard
 					if(emptyFound)
 						throw new IllegalArgumentException("The board have more than one empty tiles!");
 					
-					if(tile.desirablePosition() != size*size) //not the right-down corner
+					if(tile.desirablePosition() != board.length*board.length -1) //not the right-down corner
 						throw new IllegalArgumentException("The desirable position of the empty tile is nit the right corner!");
 					
 					emptyFound = true;
@@ -214,11 +205,11 @@ class Board implements IBoard
 	
 	/**
 	 * Check if a given tile is the empty tile
-	 * @param pos the position to check
+	 * @param tile the tile to check
 	 * @return true if this position is not occupied by any tile, false otherwise
 	 */
-	private boolean isTheEmptyTile(ITile pos){
-		return pos instanceof EmptyTile;
+	private boolean isTheEmptyTile(ITile tile){
+		return tile instanceof EmptyTile;
 	}
 	
 	/**
@@ -240,19 +231,19 @@ class Board implements IBoard
 		int size = boardSize();
 		List<Integer> neighbors = new Vector<>();	
 		
-		if(tile < 1 | tile  > size*size )
+		if(tile < 0 | tile  > size*size - 1 )
 			throw new IllegalArgumentException("The input is out of range!");
 		
-		if(getTileCol(tile) > 1)
+		if(getTileCol(tile) > 0)
 			neighbors.add(tile - 1); // Left
 		
-		if(getTileCol(tile) < size)
+		if(getTileCol(tile) < size-1)
 			neighbors.add(tile + 1); // Right
 		
-		if(getTileRow(tile) > 1)
+		if(getTileRow(tile) > 0)
 			neighbors.add(tile - size); // Up
 		
-		if(getTileRow(tile) < size)
+		if(getTileRow(tile) < size -1)
 			neighbors.add(tile + size); // Down
 		
 		return neighbors;
@@ -277,7 +268,7 @@ class Board implements IBoard
 	 */
 	private void shuffle() {
 		
-		int empty = boardSize()* boardSize();
+		int empty = boardSize()*boardSize() - 1;
 		
 		if(!isTheEmptyTile(empty))
 			throw new IllegalArgumentException("This board is alreadt shuffuled!");
@@ -286,7 +277,7 @@ class Board implements IBoard
 		List<Integer> neighbors;
 		int swapWith;
 		int numOfShuffles = rnd.nextInt(boardSize()*boardSize());        									   // number of times an automatic move will be made
-		numOfShuffles = Math.max(13 + boardSize()*boardSize()/7 + rnd.nextInt(boardSize()%3), numOfShuffles);  // if numOfShuffles =1 it will be too essay
+		numOfShuffles = Math.max(13 + boardSize()*boardSize()/7 + rnd.nextInt(boardSize()%3 +1), numOfShuffles);  // if numOfShuffles =1 it will be too essay
 		
 		for(int i=1; i<= numOfShuffles; i++)
 		{
