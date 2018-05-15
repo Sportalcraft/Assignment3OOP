@@ -1,10 +1,10 @@
 package MainPackage;
 
-import GameFrame.GameFrame;
+import GameFrame.MainMenu;
 
 public class Main {
 	
 	public static void main(String[] args) {	
-		new GameFrame(GameFrame.Sizes.FOUR, GameFrame.SavedImages.cat);
+		new MainMenu();
 	}
 }

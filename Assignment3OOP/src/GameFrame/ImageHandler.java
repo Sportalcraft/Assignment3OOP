@@ -1,62 +1,74 @@
 package GameFrame;
 
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 /**
  * This class handle the images
  */
 class ImageHandler {
-	
-	/**
-	 * Cut an image to chunks in a square (with the specified amount of pictures in the rows and columns)
-	 * @param toCut the image to cut
-	 * @param length the amount of images on a row an column
-	 * @return a matrix of the chucks of the image
-	 * @throws IOException 
-	 */
-	public static String[][] squareCut(String toCut, int length) {
-		return Cut(toCut,length,length);
-	}
-	
-	/**
-	 * return an 2D array of the picture that are already saved, by size and name
-	 * @param size the size of the board we want
-	 * @param pic the name of the picture we want
-	 * @return a 2d array of the paths to the requested images
-	 */
-	public static String[][] BuildImagesMap(int size, String pic) {	
-		
-		if(size < 3)
-			throw new IllegalArgumentException("Illegal size!");
-		
-		if(pic == null)
-			throw new IllegalArgumentException("path can't be null!");
-		
-		String[][] temp = new String[size][size];		
-		File tFile; 
-		
-		for(int i = 0; i<size; i++)
-		{
-			for(int j = 0; j<size; j++)
-			{
-				int t = size*i +j +1;
-				temp[i][j] = "images/" + pic +"/"+ pic +"_" + size + "x" + size + "/" + t + ".jpeg";
-				
-				tFile = new File(temp[i][j]);
 
-			}
-		}
-		return temp;
-	}
+	private final static String Temp_Photo_Directory = "TempDir/";
 	
-	/**
+    /**
+     * Cut an image to chunks in a square (with the specified amount of pictures
+     * in the rows and columns)
+     *
+     * @param toCut the image to cut
+     * @param length the amount of images on a row an column
+     * @return a matrix of the chucks of the image
+     * @throws IOException
+     */
+    public static String[][] squareCut(String toCut, int length) {
+        return Cut(toCut, length, length);
+    }
+
+    /**
+     * return an 2D array of the picture that are already saved, by size and
+     * name
+     *
+     * @param size the size of the board we want
+     * @param pic the name of the picture we want
+     * @return a 2d array of the paths to the requested images
+     */
+    public static String[][] BuildImagesMap(int size, String pic) {
+
+        if (size < 2) {
+            throw new IllegalArgumentException("Illegal size!");
+        }
+
+        if (pic == null) {
+            throw new IllegalArgumentException("path can't be null!");
+        }
+
+        String[][] temp = new String[size][size];
+        File tFile;
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                int t = size * i + j + 1;
+                temp[i][j] = "images/" + pic + "/" + pic + "_" + size + "x" + size + "/" + t + ".jpeg";
+
+                tFile = new File(temp[i][j]);
+
+            }
+        }
+        return temp;
+    }
+
+    /**
 	 * Cut an image to chunks (with the specified amount of pictures in the rows and columns)
 	 * @param toCut the image to cut
 	 * @param rows the amount of images on a row
@@ -66,7 +78,7 @@ class ImageHandler {
 	private static String[][] Cut(String toCut, int rows, int cols) {
 		
 		if(toCut == null)
-			throw new IllegalArgumentException("Image ti cut is null!");
+			throw new IllegalArgumentException("Image to cut is null!");
 		
 		if(rows <= 0 | cols <= 0)
 			throw new IllegalArgumentException("num of chuncks must be grater than 0!");
@@ -110,13 +122,16 @@ class ImageHandler {
             }
         }
 
+        EmptyPhtosDorectory(); // Delete previous uploads
+        
         //writing mini images into image files
         for (int i = 0; i < imgs.length; i++) {
            
-        	name = "img" + i + 1 + ".jpg";
+        	name = (i + 1) + ".jpg";
+        	name = Temp_Photo_Directory + name;
         	
         	try {
-				ImageIO.write(imgs[i], "jpg", new File(name));
+        		ImageIO.write(imgs[i], "jpg", new File(name));
 			} 
         	catch (IOException e) {
         		throw new RuntimeException("Faild to serialze images!");
@@ -126,5 +141,60 @@ class ImageHandler {
         }
        
         return toReturn;
+    }
+	
+	/**
+	 * delete the content a directory of images
+	 */
+	private static void EmptyPhtosDorectory() 
+	{ 
+	  File dir  = new File(Temp_Photo_Directory);
+		
+	  if(!dir.exists())
+		  new File(Temp_Photo_Directory).mkdirs();
+	  
+	  if (dir.isDirectory()) 
+	  { 
+		  String[] files = dir.list(); 
+		  for (int i=0; i<files.length; i++)
+			  new File(dir, files[i]).delete(); 
+	  }  
+	} 
+
+    public static void buildImg(URL imgUrl, JLabel lblPicPrev) {
+        ImageIcon imgIc = new ImageIcon(imgUrl);
+        Image img = imgIc.getImage();
+        Image scImg = img.getScaledInstance(lblPicPrev.getWidth(), lblPicPrev.getHeight(), Image.SCALE_SMOOTH);
+        lblPicPrev.setIcon(new ImageIcon(scImg));
+    }
+
+    public static Image scaledImg(String file, JButton btn) {
+        ImageIcon imgIc = new ImageIcon(BoardPanel.class.getResource(file));
+        Image img = imgIc.getImage();
+        Image scImg = img.getScaledInstance(btn.getWidth(), btn.getHeight(), Image.SCALE_SMOOTH);
+        return scImg;
+    }
+    
+    public static Image scaledNewImg(String file, JButton btn) {
+        ImageIcon imgIc = new ImageIcon(file);
+        Image img = imgIc.getImage();
+        Image scImg = img.getScaledInstance(btn.getWidth(), btn.getHeight(), Image.SCALE_SMOOTH);
+        return scImg;
+    }
+    
+    /**
+     * sets a label of a frame with a given image
+     * @param pic
+     * @param lblPicPrev 
+     */
+    public static void setRefLbl(String pic, JLabel lblPicPrev) {
+        URL imgUrl;
+        try {
+            imgUrl = GameFrame.class.getResource("images/" + pic + "/" + pic + ".jpg");
+            buildImg(imgUrl, lblPicPrev);
+        } catch (Exception e) {
+            imgUrl = GameFrame.class.getResource("images/" + pic + "/" + pic + ".jpeg");
+            buildImg(imgUrl, lblPicPrev);
+        }
     }
 }

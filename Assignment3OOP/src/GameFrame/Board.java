@@ -38,8 +38,9 @@ class Board implements IBoard
 		{			
 			while(!shuffled) // just to make sure the board is truly shuffled
 			{		
-				shuffle();		
+				shuffle();
 				shuffled = !isComplete();
+                                _solved = false;
 			}
 		}
 		else 
@@ -57,15 +58,21 @@ class Board implements IBoard
 	public Board(ITile[][] tiles){
 		this(tiles, false);
 	}
-	
+	/**
+         * 
+         * @return the board size
+         */
 	@Override
 	public int boardSize() {
 		return _boardMatrix.length;
 	}
-
+        /**
+         * gets a tile position and swaps it with the empty tile
+         * @param tile to move
+         * @return the emptyTile Position
+         */
 	@Override
 	public int moveTile(int tile) {
-		
 		if(isLocked())
 			throw new IllegalStateException("A change cannot be made to this board since it is already solved!"); 
 		
@@ -80,10 +87,15 @@ class Board implements IBoard
 				return neighbor;
 			}
 		}
-		
+            
 		throw new IllegalArgumentException("This tile is not a neighbor of the empty tile, and therefore, could not be moved!"); 
+           
 	}
-
+        
+        /**
+         * 
+         * @return true if the board is solved
+         */
 	@Override
 	public boolean isComplete() {
 			
@@ -103,10 +115,13 @@ class Board implements IBoard
 			}
 		}
 		
-		lock(); 	 // Lock the board - it is solved
+		lock(); 	 // Lock the board - it is solved           
 		return true; // All tiles in place
 	}
 	
+        /**
+         * @return an array of Tiles that reprresent the board
+         */
 	@Override
 	public ITile[][] boardMap() {
 		return _boardMatrix;
@@ -208,7 +223,7 @@ class Board implements IBoard
 	 * @param num the position of the tile
 	 * @return the row that this tile is in
 	 */
-	private int getTileRow(int num){
+	public int getTileRow(int num){
 		return num / boardSize();
 	}
 	
@@ -217,7 +232,7 @@ class Board implements IBoard
 	 * @param num the position of the tile
 	 * @return the column that this tile is in
 	 */
-	private int getTileCol(int num){
+	public int getTileCol(int num){
 		return num % boardSize();
 	}
 	
@@ -307,4 +322,16 @@ class Board implements IBoard
 		}	
 		
 	}
+        
+        /**
+         * 
+         * @return the position of the emptyTile
+         */
+        public int getEmptyTilePosition(){
+            for(int i=0;i<_boardMatrix.length;i++)
+                for(int j=0;j<_boardMatrix.length;j++)
+                    if(isTheEmptyTile(_boardMatrix[i][j]))
+                        return i*_boardMatrix.length+j;
+            throw new IllegalArgumentException("no such tile");
+        }
 }

@@ -33,11 +33,16 @@ abstract class AbstractTile implements ITile
 		_content = content;
 	}
 	
+        /**
+         * @return the tiles desirablePosition
+         */
 	@Override
 	public int desirablePosition() {
 		return _desirablePosition;
 	}
-	
+	/**
+         * @return the tile's image string represantation
+         */
 	@Override
 	public String content() {
 		return _content;
