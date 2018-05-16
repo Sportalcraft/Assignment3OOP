@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,21 +21,19 @@ import javax.swing.JLabel;
  */
 class ImageHandler {
 
-	private final static String Temp_Photo_Directory = "TempDir/";
+	private final static String Temp_Photo_Directory = "images/Temp";
 	
     /**
      * Cut an image to chunks in a square (with the specified amount of pictures
      * in the rows and columns)
-     *
      * @param toCut the image to cut
      * @param length the amount of images on a row an column
      * @return a matrix of the chucks of the image
-     * @throws IOException
      */
     public static String[][] squareCut(String toCut, int length) {
-        return Cut(toCut, length, length);
+        return cut(toCut, length, length);
     }
-
+    
     /**
      * return an 2D array of the picture that are already saved, by size and
      * name
@@ -59,13 +58,35 @@ class ImageHandler {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 int t = size * i + j + 1;
-                temp[i][j] = "images/" + pic + "/" + pic + "_" + size + "x" + size + "/" + t + ".jpeg";
+                temp[i][j] = SavedPhotoPath(pic, size, t);
 
                 tFile = new File(temp[i][j]);
 
             }
         }
         return temp;
+    }
+    
+    /**
+     * return the path of on of the save images
+     * @param pic
+     * @param size
+     * @param num
+     * @return
+     */
+    public static String SavedPhotoPath(String pic, int size, int num)
+    {
+    	return "images/" + pic + "/" + pic + "_" + size + "x" + size + "/" + num + ".jpeg";
+    }
+    
+    /**
+     * return the path of on of the save images
+     * @param pic
+     * @return
+     */
+    public static String SavedPhotoPath(String pic)
+    {
+    	return "images/" + pic + "/" + pic + ".jpeg";
     }
 
     /**
@@ -75,7 +96,7 @@ class ImageHandler {
 	 * @param cols the amount of images on a column
 	 * @return 2D array of the chucks of the image 
 	 */
-	private static String[][] Cut(String toCut, int rows, int cols) {
+	private static String[][] cut(String toCut, int rows, int cols) {
 		
 		if(toCut == null)
 			throw new IllegalArgumentException("Image to cut is null!");
@@ -127,11 +148,11 @@ class ImageHandler {
         //writing mini images into image files
         for (int i = 0; i < imgs.length; i++) {
            
-        	name = (i + 1) + ".jpg";
-        	name = Temp_Photo_Directory + name;
+        	name = (i + 1) + ".jpeg";
+        	name = Temp_Photo_Directory + "/" + name;
         	
         	try {
-        		ImageIO.write(imgs[i], "jpg", new File(name));
+        		ImageIO.write(imgs[i], "jpeg", new File(name));
 			} 
         	catch (IOException e) {
         		throw new RuntimeException("Faild to serialze images!");
@@ -148,20 +169,20 @@ class ImageHandler {
 	 */
 	private static void EmptyPhtosDorectory() 
 	{ 
-	  File dir  = new File(Temp_Photo_Directory);
+		File dir  = new File(Temp_Photo_Directory);
 		
-	  if(!dir.exists())
-		  new File(Temp_Photo_Directory).mkdirs();
+		if(!dir.exists())
+			dir.mkdirs();
 	  
-	  if (dir.isDirectory()) 
-	  { 
-		  String[] files = dir.list(); 
-		  for (int i=0; i<files.length; i++)
-			  new File(dir, files[i]).delete(); 
-	  }  
+		if (dir.isDirectory()) 
+		{ 
+			String[] files = dir.list(); 
+			for (int i=0; i<files.length; i++)
+				new File(dir, files[i]).delete(); 
+		}  
 	} 
-
-    public static void buildImg(URL imgUrl, JLabel lblPicPrev) {
+    
+    public static void scaledImg(String imgUrl, JLabel lblPicPrev) {
         ImageIcon imgIc = new ImageIcon(imgUrl);
         Image img = imgIc.getImage();
         Image scImg = img.getScaledInstance(lblPicPrev.getWidth(), lblPicPrev.getHeight(), Image.SCALE_SMOOTH);
@@ -169,32 +190,9 @@ class ImageHandler {
     }
 
     public static Image scaledImg(String file, JButton btn) {
-        ImageIcon imgIc = new ImageIcon(BoardPanel.class.getResource(file));
-        Image img = imgIc.getImage();
-        Image scImg = img.getScaledInstance(btn.getWidth(), btn.getHeight(), Image.SCALE_SMOOTH);
-        return scImg;
-    }
-    
-    public static Image scaledNewImg(String file, JButton btn) {
         ImageIcon imgIc = new ImageIcon(file);
         Image img = imgIc.getImage();
         Image scImg = img.getScaledInstance(btn.getWidth(), btn.getHeight(), Image.SCALE_SMOOTH);
         return scImg;
-    }
-    
-    /**
-     * sets a label of a frame with a given image
-     * @param pic
-     * @param lblPicPrev 
-     */
-    public static void setRefLbl(String pic, JLabel lblPicPrev) {
-        URL imgUrl;
-        try {
-            imgUrl = GameFrame.class.getResource("images/" + pic + "/" + pic + ".jpg");
-            buildImg(imgUrl, lblPicPrev);
-        } catch (Exception e) {
-            imgUrl = GameFrame.class.getResource("images/" + pic + "/" + pic + ".jpeg");
-            buildImg(imgUrl, lblPicPrev);
-        }
     }
 }

@@ -8,13 +8,22 @@ package GameFrame;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Pattern;
+
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.ListSelectionModel;
 
 
@@ -26,6 +35,7 @@ public class MainMenu extends javax.swing.JFrame {
     public MainMenu(ReadCsv read) {
          addInitialImg(imgArr);
         _read = read;
+        _newImage = false;
         initComponents();
         
     }
@@ -61,9 +71,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     private void setSizeLbl(String size) {
         lblSelSize.setText(size + "X" + size);
-        if (lblImgSelPrev.getIcon() != null) {
-            btnStart.setEnabled(true);
-        }
+        voudEnableStartIfPossibale();
     }
     /**
      * adds the initial images to the list of images
@@ -127,7 +135,7 @@ public class MainMenu extends javax.swing.JFrame {
         btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("MainMenu");
+        setTitle("Main Menu");
         setName("mainMenuFrame"); // NOI18N
         setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(1000, 600));
@@ -164,8 +172,8 @@ public class MainMenu extends javax.swing.JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSelMenuActionPerformed(evt);
             }
-        });
-
+        });    
+        
         lblHelp.setBackground(new java.awt.Color(255, 255, 255));
         lblHelp.setOpaque(true);
 
@@ -401,6 +409,51 @@ public class MainMenu extends javax.swing.JFrame {
         btnAddImg.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
         btnAddImg.setForeground(new java.awt.Color(102, 0, 102));
         btnAddImg.setText("Add Image");
+        
+        
+        
+        
+        
+        
+        btnAddImg.addActionListener( new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				JFileChooser chooser = new JFileChooser();
+				chooser.showOpenDialog(null);
+				File f = chooser.getSelectedFile();
+				String s = f.getAbsolutePath();
+				
+				String[] temp = s.split(Pattern.quote("."));
+				
+				if(temp.length == 0 || !temp[temp.length -1].equals("jpeg"))
+				{
+					JOptionPane.showMessageDialog(null,
+		                    "Please upload a JPEG file only", "Not valid photo", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				
+				ImageIcon imgIc = new ImageIcon(s);
+			    Image img = imgIc.getImage();
+			    
+			    Image scImg = img.getScaledInstance(lblImgSelPrev.getWidth(), lblImgSelPrev.getHeight(), Image.SCALE_SMOOTH);				
+				lblImgSelPrev.setIcon(new ImageIcon(scImg));
+				
+				scImg = img.getScaledInstance(lblImgSelPrev.getWidth(), lblImgSelPrev.getHeight(), Image.SCALE_SMOOTH);
+				lblSelPreview.setIcon(new ImageIcon(scImg));		
+				
+				_newImage = true;
+				_newImagePath = s;
+				
+			}});
+        
+        
+        
+        
+        
+        
 
         lblSelImgPlease.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
         lblSelImgPlease.setForeground(new java.awt.Color(0, 102, 102));
@@ -693,7 +746,7 @@ public class MainMenu extends javax.swing.JFrame {
         );
 
         setSize(new java.awt.Dimension(1000, 600));
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(null);     
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -703,18 +756,34 @@ public class MainMenu extends javax.swing.JFrame {
      * @param evt 
      */
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        if (_useCsv) {
-            try {
-                new GameFrame(ImageHandler.BuildImagesMap(selSize, imgList.getSelectedValue()), csvBoard(), imgList.getSelectedValue());
-                dispose();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,
-                        "No Boards By this Size,Try Again","Failure", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (_shuffle) {
-            new GameFrame(selSize, imgList.getSelectedValue());
-            dispose();
+        
+    	try {	  		
+    		if(_useCsv)
+    		{
+    			if(_newImage)
+    			{
+    				JOptionPane.showMessageDialog(null,
+    	                    "custom image is possibale only with random shuffeling!","Failure", JOptionPane.ERROR_MESSAGE);
+    				return;
+    			}
+    			else
+    				new GameFrame(ImageHandler.BuildImagesMap(selSize, imgList.getSelectedValue()), csvBoard(), imgList.getSelectedValue());
+    		}
+    		
+    		if (_shuffle)
+    		{
+    			if(_newImage)
+    				new GameFrame(_newImagePath, selSize);				   				
+    			else
+    				new GameFrame(selSize, imgList.getSelectedValue());
+    		}
+    	}
+    	catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    "Failed to create the board","Failure", JOptionPane.ERROR_MESSAGE);
         }
+    	
+    	dispose();
     }//GEN-LAST:event_btnStartActionPerformed
     
     
@@ -745,7 +814,6 @@ public class MainMenu extends javax.swing.JFrame {
         pnlBody.repaint();
         pnlBody.revalidate();
         
-        updateLabel(imgArr[0]);
     }//GEN-LAST:event_btnSelMenuActionPerformed
 
     private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
@@ -789,20 +857,50 @@ public class MainMenu extends javax.swing.JFrame {
     private void imgListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_imgListValueChanged
         JList list = (JList)evt.getSource();
         updateLabel(imgArr[list.getSelectedIndex()]);
-        if(lblSelSize.getText()!="")
-            btnStart.setEnabled(true);
+        
     }//GEN-LAST:event_imgListValueChanged
 
     private void updateLabel(String pic) {
-        ImageHandler.setRefLbl(pic, lblImgSelPrev);
-        ImageHandler.setRefLbl(pic, lblSelPreview);
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblImgSelPrev);
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblSelPreview);
+        voudEnableStartIfPossibale();
     }
     private void _lblEnterSIzeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__lblEnterSIzeActionPerformed
-        _tfEnterSize.setEnabled(true);
+    	_tfEnterSize.setEnabled(true);
     }//GEN-LAST:event__lblEnterSIzeActionPerformed
 
     private void _tfEnterSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__tfEnterSizeActionPerformed
-        // TODO add your handling code here:
+    	Integer t = null; 
+		
+		try
+       	 {
+			 t = Integer.parseInt(_tfEnterSize.getText());
+       	 }
+       	 catch(Exception e)
+       	 {
+ 			JOptionPane.showMessageDialog(null,
+                    "Your input is not a number", "check input!", JOptionPane.ERROR_MESSAGE);
+ 			return;
+       	 }
+	
+         if(t < 2) //Not legal board size
+ 		{
+ 			JOptionPane.showMessageDialog(null,
+                     "bords size must be atleast 2!", "error", JOptionPane.ERROR_MESSAGE);
+ 			return;
+ 		}
+         
+		if(!_newImage & (t <3 | t>5)) //Not legal for static saved images
+		{
+			JOptionPane.showMessageDialog(null,
+                    "pre saved images can be used only in sizes between 3 and 5!", "error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		 setSizeLbl(t.toString());
+         selSize = t;
+		
+		
     }//GEN-LAST:event__tfEnterSizeActionPerformed
 
     private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
@@ -833,18 +931,28 @@ public class MainMenu extends javax.swing.JFrame {
     private void lblShuffleBoardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblShuffleBoardActionPerformed
         _shuffle = true;
         _useCsv = false;
+        voudEnableStartIfPossibale();
     }//GEN-LAST:event_lblShuffleBoardActionPerformed
 
     private void lblUseCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblUseCsvActionPerformed
         _shuffle = false;
         _useCsv = true;
+        voudEnableStartIfPossibale();
     }//GEN-LAST:event_lblUseCsvActionPerformed
+    
+    private void voudEnableStartIfPossibale()
+    {
+    	if(lblSelSize.getText()!="" & lblImgSelPrev.getIcon() != null & BgroupUse.getSelection() != null) //All info selected
+            btnStart.setEnabled(true);
+    }
     
     private static boolean maximized = true;
     private int xMouse;
     private int yMouse;
     private boolean _useCsv;
     private boolean _shuffle;
+    private boolean _newImage;
+    private String _newImagePath;
     private ReadCsv _read;
     private int selSize;
     private DefaultListModel model;

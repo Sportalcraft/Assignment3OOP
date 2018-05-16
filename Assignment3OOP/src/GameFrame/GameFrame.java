@@ -32,7 +32,7 @@ public class GameFrame extends javax.swing.JFrame {
     public GameFrame(String[][] images, Integer[][] boardOrder, String pic) {
 
         this(BuildBoard(images, boardOrder));
-        ImageHandler.setRefLbl(pic.toString(), lblPicPrev);
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblPicPrev);
         Verify2DArray(images);
         Verify2DArray(boardOrder);
 
@@ -57,8 +57,16 @@ public class GameFrame extends javax.swing.JFrame {
      * @param pic
      */
     public GameFrame(int size, String pic) {
-        this(ImageHandler.BuildImagesMap(size, pic.toString()));
-        ImageHandler.setRefLbl(pic.toString(), lblPicPrev);
+        this(ImageHandler.BuildImagesMap(size, pic));
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblPicPrev);
+    }
+    
+    public GameFrame(String toCut, int size) {
+        this(ImageHandler.squareCut(toCut, size));
+        
+        Image img = new ImageIcon(toCut).getImage();
+        img = img.getScaledInstance(lblPicPrev.getWidth(), lblPicPrev.getHeight(), Image.SCALE_SMOOTH);
+        lblPicPrev.setIcon(new ImageIcon(img));
     }
 
     /**
@@ -549,6 +557,7 @@ public class GameFrame extends javax.swing.JFrame {
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         int op = JOptionPane.showConfirmDialog(this, "Are You Sure?? This Action Will Reset the Game ", "Back", JOptionPane.YES_NO_OPTION);
         if (op == 0) {
+        	GameFrame.timer.stop();
             MainMenu mMenu = new MainMenu(new ReadCsv("Boards.csv"));
             mMenu.setVisible(true);
             dispose();

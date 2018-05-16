@@ -62,7 +62,7 @@ public class BoardPanel extends JPanel implements ActionListener {
 		_undo = new Stack<>();
 		_moves = 0;
 		addPanelMap();
-                addKeysActions();
+        addKeysActions();
 	}
     /**
      * creates the map of JButtons that represents the board 
@@ -71,17 +71,21 @@ public class BoardPanel extends JPanel implements ActionListener {
     private void addPanelMap() {
         try {
             String file;
+            int size;
+            Dimension d;
             for (int i = 0; i < _buttons.length; i++) {
                 for (int j = 0; j < _buttons.length; j++) {
                     file = _board.boardMap()[i][j].content();
-
-                    if (file != null) {
-                        _buttons[i][j] = new JButton();
-                        _buttons[i][j].setSize(new Dimension(PANEL_SIZE / _board.boardSize(), PANEL_SIZE / _board.boardSize()));
+                    _buttons[i][j] = new JButton();
+                    
+                    size = PANEL_SIZE / _board.boardSize();
+                    d = new Dimension(size, size);
+                    _buttons[i][j].setSize(d);
+                    
+                    if (file != null) {              
                         _buttons[i][j].setIcon(new ImageIcon(ImageHandler.scaledImg(file, _buttons[i][j])));
                     } else {
-                        _buttons[i][j] = new JButton(new ImageIcon());
-                        _buttons[i][j].setSize(new Dimension(PANEL_SIZE / _board.boardSize(), PANEL_SIZE / _board.boardSize()));
+                        _buttons[i][j].setIcon(new ImageIcon());
                     }
 
                     _buttons[i][j].addActionListener(this);
@@ -90,7 +94,7 @@ public class BoardPanel extends JPanel implements ActionListener {
                 }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Board is Already Solved","solved",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Failed to build the board panel!" ,"Error",JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
