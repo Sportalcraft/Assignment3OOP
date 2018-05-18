@@ -2,26 +2,21 @@
 package GameFrame;
 
 import java.awt.Color;
-import java.awt.Dimension;
+
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.net.URL;
-import java.util.ArrayList;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.Timer;
+import javax.swing.*;
+
+import ImageHandling.ImageHandler;
+
+import GameLogic.*;
+
+import CsvReader.ReadCsv;
 
 
-public class GameFrame extends javax.swing.JFrame {
-
-    
-
+public class GameFrame extends JFrame {
     /**
      * A constructor
      *
@@ -32,7 +27,7 @@ public class GameFrame extends javax.swing.JFrame {
     public GameFrame(String[][] images, Integer[][] boardOrder, String pic) {
 
         this(BuildBoard(images, boardOrder));
-        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblPicPrev);
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), _lblPicPrev);
         Verify2DArray(images);
         Verify2DArray(boardOrder);
 
@@ -58,15 +53,34 @@ public class GameFrame extends javax.swing.JFrame {
      */
     public GameFrame(int size, String pic) {
         this(ImageHandler.BuildImagesMap(size, pic));
-        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblPicPrev);
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), _lblPicPrev);
+    }
+
+    /**
+     * creates a new GameFrame with an image uploaded by the user
+     * @param toCut image uploaded
+     * @param size wished size by the user
+     * @param boardOrder the order of the board
+     */
+    public GameFrame(String toCut, Integer[][] boardOrder) {
+        this(BuildBoard(ImageHandler.squareCut(toCut, boardOrder.length),boardOrder ));
+        
+        Image img = new ImageIcon(toCut).getImage();
+        img = img.getScaledInstance(_lblPicPrev.getWidth(), _lblPicPrev.getHeight(), Image.SCALE_SMOOTH);
+        _lblPicPrev.setIcon(new ImageIcon(img));
     }
     
+    /**
+     * creates a new GameFrame with an image uploaded by the user
+     * @param toCut image uploaded
+     * @param size wished size by the user
+     */
     public GameFrame(String toCut, int size) {
         this(ImageHandler.squareCut(toCut, size));
         
         Image img = new ImageIcon(toCut).getImage();
-        img = img.getScaledInstance(lblPicPrev.getWidth(), lblPicPrev.getHeight(), Image.SCALE_SMOOTH);
-        lblPicPrev.setIcon(new ImageIcon(img));
+        img = img.getScaledInstance(_lblPicPrev.getWidth(), _lblPicPrev.getHeight(), Image.SCALE_SMOOTH);
+        _lblPicPrev.setIcon(new ImageIcon(img));
     }
 
     /**
@@ -78,14 +92,16 @@ public class GameFrame extends javax.swing.JFrame {
 
         _board = board;
         initComponents();
-        myInitComponents();
     }
 
     /**
      * undo the last action done in the game
      */
     public void undo() {
-        _board.undo();
+       try{
+    	_board.undo();
+       }
+       catch (Exception e) {}
     }
 
     /*
@@ -187,70 +203,70 @@ public class GameFrame extends javax.swing.JFrame {
      * @param moves
      */
     public static void addMoves(String moves) {
-        lblMovesPrev.setText(moves);
+        _lblMovesPrev.setText(moves);
     }
     /**
      * handles updating the time lable of the game
      */
     private void updateTimelbl() {
-        seconds++;
-        if (seconds == 60) {
-            seconds = 0;
-            minutes++;
-            if (minutes == 60) {
-                minutes = 0;
-                hours++;
+        _seconds++;
+        if (_seconds == 60) {
+            _seconds = 0;
+            _minutes++;
+            if (_minutes == 60) {
+                _minutes = 0;
+                _hours++;
             }
         }
-        lblTimePrev.setText(" " + hours + " : " + minutes + " : " + seconds + " ");
+        _lblTimePrev.setText(" " + _hours + " : " + _minutes + " : " + _seconds + " ");
     }
 
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="initialization">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlHeader = new javax.swing.JPanel();
-        btnExit = new javax.swing.JButton();
-        pnlBoardBtns = new javax.swing.JPanel();
-        pnlBoardBack = new javax.swing.JPanel();
-        pnlBoard = new javax.swing.JPanel();
-        pnlBtns = new javax.swing.JPanel();
-        btnUndo = new javax.swing.JButton();
-        btnBack = new javax.swing.JButton();
-        pnlGamePrev = new javax.swing.JPanel();
-        pnlGameImgPrev = new javax.swing.JPanel();
-        lblPicPrev = new javax.swing.JLabel();
-        pnlInfo = new javax.swing.JPanel();
-        lblMoves = new javax.swing.JLabel();
-        lblTime = new javax.swing.JLabel();
-        lblMovesPrev = new javax.swing.JLabel();
-        lblTimePrev = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
+        _pnlHeader = new javax.swing.JPanel();
+        _btnExit = new javax.swing.JButton();
+        _pnlBoardBtns = new javax.swing.JPanel();
+        _pnlBoardBack = new javax.swing.JPanel();
+        _pnlBoard = new javax.swing.JPanel();
+        _pnlBtns = new javax.swing.JPanel();
+        _btnUndo = new javax.swing.JButton();
+        _btnBack = new javax.swing.JButton();
+        _pnlGamePrev = new javax.swing.JPanel();
+        _pnlGameImgPrev = new javax.swing.JPanel();
+        _lblPicPrev = new javax.swing.JLabel();
+        _pnlInfo = new javax.swing.JPanel();
+        _lblMoves = new javax.swing.JLabel();
+        _lblTime = new javax.swing.JLabel();
+        _lblMovesPrev = new javax.swing.JLabel();
+        _lblTimePrev = new javax.swing.JLabel();
+        _pnlSeperator = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("GameFrame"); // NOI18N
         setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(1000, 600));
 
-        pnlHeader.setBackground(new java.awt.Color(255, 255, 255));
-        pnlHeader.setForeground(new java.awt.Color(255, 255, 255));
-        pnlHeader.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        _pnlHeader.setBackground(new java.awt.Color(255, 255, 255));
+        _pnlHeader.setForeground(new java.awt.Color(255, 255, 255));
+        _pnlHeader.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 pnlHeaderMouseDragged(evt);
             }
         });
-        pnlHeader.addMouseListener(new java.awt.event.MouseAdapter() {
+        _pnlHeader.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 pnlHeaderMousePressed(evt);
             }
         });
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
-        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/Exit.png"))); // NOI18N
-        btnExit.setContentAreaFilled(false);
-        btnExit.setFocusable(false);
-        btnExit.setOpaque(true);
-        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
+        _btnExit.setBackground(new java.awt.Color(255, 255, 255));
+        _btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/Exit.png"))); // NOI18N
+        _btnExit.setContentAreaFilled(false);
+        _btnExit.setFocusable(false);
+        _btnExit.setOpaque(true);
+        _btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnExitMouseEntered(evt);
             }
@@ -258,36 +274,36 @@ public class GameFrame extends javax.swing.JFrame {
                 btnExitMouseExited(evt);
             }
         });
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
+        _btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
-        pnlHeader.setLayout(pnlHeaderLayout);
+        javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(_pnlHeader);
+        _pnlHeader.setLayout(pnlHeaderLayout);
         pnlHeaderLayout.setHorizontalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlHeaderLayout.createSequentialGroup()
                 .addContainerGap(942, Short.MAX_VALUE)
-                .addComponent(btnExit)
+                .addComponent(_btnExit)
                 .addContainerGap())
         );
         pnlHeaderLayout.setVerticalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(_btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pnlBoardBtns.setBackground(new java.awt.Color(153, 153, 255));
+        _pnlBoardBtns.setBackground(new java.awt.Color(153, 153, 255));
 
-        pnlBoardBack.setBackground(new java.awt.Color(204, 204, 255));
-        pnlBoardBack.setForeground(new java.awt.Color(102, 102, 102));
+        _pnlBoardBack.setBackground(new java.awt.Color(204, 204, 255));
+        _pnlBoardBack.setForeground(new java.awt.Color(102, 102, 102));
 
-        pnlBoard.setBackground(new java.awt.Color(204, 204, 255));
-        pnlBoard.setPreferredSize(new java.awt.Dimension(450, 450));
+        _pnlBoard.setBackground(new java.awt.Color(204, 204, 255));
+        _pnlBoard.setPreferredSize(new java.awt.Dimension(450, 450));
 
-        javax.swing.GroupLayout pnlBoardLayout = new javax.swing.GroupLayout(pnlBoard);
-        pnlBoard.setLayout(pnlBoardLayout);
+        javax.swing.GroupLayout pnlBoardLayout = new javax.swing.GroupLayout(_pnlBoard);
+        _pnlBoard.setLayout(pnlBoardLayout);
         pnlBoardLayout.setHorizontalGroup(
             pnlBoardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 444, Short.MAX_VALUE)
@@ -297,54 +313,54 @@ public class GameFrame extends javax.swing.JFrame {
             .addGap(0, 457, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout pnlBoardBackLayout = new javax.swing.GroupLayout(pnlBoardBack);
-        pnlBoardBack.setLayout(pnlBoardBackLayout);
+        javax.swing.GroupLayout pnlBoardBackLayout = new javax.swing.GroupLayout(_pnlBoardBack);
+        _pnlBoardBack.setLayout(pnlBoardBackLayout);
         pnlBoardBackLayout.setHorizontalGroup(
             pnlBoardBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBoardBackLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addComponent(pnlBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(33, Short.MAX_VALUE))
         );
         pnlBoardBackLayout.setVerticalGroup(
             pnlBoardBackLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBoardBackLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
-        pnlBtns.setBackground(new java.awt.Color(204, 204, 255));
+        _pnlBtns.setBackground(new java.awt.Color(204, 204, 255));
 
-        btnUndo.setBackground(new java.awt.Color(204, 255, 255));
-        btnUndo.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        btnUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-undo-50.png"))); // NOI18N
-        btnUndo.addActionListener(new java.awt.event.ActionListener() {
+        _btnUndo.setBackground(new java.awt.Color(204, 255, 255));
+        _btnUndo.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _btnUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-undo-50.png"))); // NOI18N
+        _btnUndo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUndoActionPerformed(evt);
             }
         });
 
-        btnBack.setBackground(new java.awt.Color(204, 255, 255));
-        btnBack.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        btnBack.setForeground(new java.awt.Color(102, 102, 255));
-        btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-go-back-50.png"))); // NOI18N
-        btnBack.setText("Back To Menu");
-        btnBack.addActionListener(new java.awt.event.ActionListener() {
+        _btnBack.setBackground(new java.awt.Color(204, 255, 255));
+        _btnBack.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _btnBack.setForeground(new java.awt.Color(102, 102, 255));
+        _btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-go-back-50.png"))); // NOI18N
+        _btnBack.setText("Back To Menu");
+        _btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBackActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout pnlBtnsLayout = new javax.swing.GroupLayout(pnlBtns);
-        pnlBtns.setLayout(pnlBtnsLayout);
+        javax.swing.GroupLayout pnlBtnsLayout = new javax.swing.GroupLayout(_pnlBtns);
+        _pnlBtns.setLayout(pnlBtnsLayout);
         pnlBtnsLayout.setHorizontalGroup(
             pnlBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBtnsLayout.createSequentialGroup()
                 .addGap(83, 83, 83)
-                .addComponent(btnUndo)
+                .addComponent(_btnUndo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnBack)
+                .addComponent(_btnBack)
                 .addGap(60, 60, 60))
         );
         pnlBtnsLayout.setVerticalGroup(
@@ -352,80 +368,80 @@ public class GameFrame extends javax.swing.JFrame {
             .addGroup(pnlBtnsLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(pnlBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnUndo)
-                    .addComponent(btnBack))
+                    .addComponent(_btnUndo)
+                    .addComponent(_btnBack))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout pnlBoardBtnsLayout = new javax.swing.GroupLayout(pnlBoardBtns);
-        pnlBoardBtns.setLayout(pnlBoardBtnsLayout);
+        javax.swing.GroupLayout pnlBoardBtnsLayout = new javax.swing.GroupLayout(_pnlBoardBtns);
+        _pnlBoardBtns.setLayout(pnlBoardBtnsLayout);
         pnlBoardBtnsLayout.setHorizontalGroup(
             pnlBoardBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlBoardBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnlBtns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(_pnlBoardBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(_pnlBtns, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnlBoardBtnsLayout.setVerticalGroup(
             pnlBoardBtnsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBoardBtnsLayout.createSequentialGroup()
-                .addComponent(pnlBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(pnlBoardBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlBoardBack, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50))
         );
 
-        pnlGamePrev.setBackground(new java.awt.Color(204, 204, 255));
+        _pnlGamePrev.setBackground(new java.awt.Color(204, 204, 255));
 
-        pnlGameImgPrev.setBackground(new java.awt.Color(153, 204, 255));
-        pnlGameImgPrev.setForeground(new java.awt.Color(153, 153, 0));
+        _pnlGameImgPrev.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlGameImgPrev.setForeground(new java.awt.Color(153, 153, 0));
 
-        javax.swing.GroupLayout pnlGameImgPrevLayout = new javax.swing.GroupLayout(pnlGameImgPrev);
-        pnlGameImgPrev.setLayout(pnlGameImgPrevLayout);
+        javax.swing.GroupLayout pnlGameImgPrevLayout = new javax.swing.GroupLayout(_pnlGameImgPrev);
+        _pnlGameImgPrev.setLayout(pnlGameImgPrevLayout);
         pnlGameImgPrevLayout.setHorizontalGroup(
             pnlGameImgPrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGameImgPrevLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblPicPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblPicPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlGameImgPrevLayout.setVerticalGroup(
             pnlGameImgPrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGameImgPrevLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblPicPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblPicPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnlInfo.setBackground(new java.awt.Color(204, 204, 255));
+        _pnlInfo.setBackground(new java.awt.Color(204, 204, 255));
 
-        lblMoves.setFont(new java.awt.Font("MV Boli", 0, 24)); // NOI18N
-        lblMoves.setForeground(new java.awt.Color(0, 102, 102));
-        lblMoves.setText("moves : ");
+        _lblMoves.setFont(new java.awt.Font("MV Boli", 0, 24)); // NOI18N
+        _lblMoves.setForeground(new java.awt.Color(0, 102, 102));
+        _lblMoves.setText("moves : ");
 
-        lblTime.setFont(new java.awt.Font("MV Boli", 0, 24)); // NOI18N
-        lblTime.setForeground(new java.awt.Color(0, 102, 102));
-        lblTime.setText("Time:");
+        _lblTime.setFont(new java.awt.Font("MV Boli", 0, 24)); // NOI18N
+        _lblTime.setForeground(new java.awt.Color(0, 102, 102));
+        _lblTime.setText("Time:");
 
-        lblMovesPrev.setFont(new java.awt.Font("Lucida Calligraphy", 0, 30)); // NOI18N
-        lblMovesPrev.setForeground(new java.awt.Color(153, 0, 0));
+        _lblMovesPrev.setFont(new java.awt.Font("Lucida Calligraphy", 0, 30)); // NOI18N
+        _lblMovesPrev.setForeground(new java.awt.Color(153, 0, 0));
 
-        lblTimePrev.setFont(new java.awt.Font("Lucida Calligraphy", 0, 30)); // NOI18N
-        lblTimePrev.setForeground(new java.awt.Color(153, 0, 0));
+        _lblTimePrev.setFont(new java.awt.Font("Lucida Calligraphy", 0, 30)); // NOI18N
+        _lblTimePrev.setForeground(new java.awt.Color(153, 0, 0));
 
-        javax.swing.GroupLayout pnlInfoLayout = new javax.swing.GroupLayout(pnlInfo);
-        pnlInfo.setLayout(pnlInfoLayout);
+        javax.swing.GroupLayout pnlInfoLayout = new javax.swing.GroupLayout(_pnlInfo);
+        _pnlInfo.setLayout(pnlInfoLayout);
         pnlInfoLayout.setHorizontalGroup(
             pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlInfoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlInfoLayout.createSequentialGroup()
-                        .addComponent(lblMoves)
+                        .addComponent(_lblMoves)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblMovesPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(_lblMovesPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlInfoLayout.createSequentialGroup()
-                        .addComponent(lblTime)
+                        .addComponent(_lblTime)
                         .addGap(18, 18, 18)
-                        .addComponent(lblTimePrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(_lblTimePrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlInfoLayout.setVerticalGroup(
@@ -433,40 +449,40 @@ public class GameFrame extends javax.swing.JFrame {
             .addGroup(pnlInfoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMoves)
-                    .addComponent(lblMovesPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(_lblMoves)
+                    .addComponent(_lblMovesPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(65, 65, 65)
                 .addGroup(pnlInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lblTimePrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(_lblTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_lblTimePrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(77, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout pnlGamePrevLayout = new javax.swing.GroupLayout(pnlGamePrev);
-        pnlGamePrev.setLayout(pnlGamePrevLayout);
+        javax.swing.GroupLayout pnlGamePrevLayout = new javax.swing.GroupLayout(_pnlGamePrev);
+        _pnlGamePrev.setLayout(pnlGamePrevLayout);
         pnlGamePrevLayout.setHorizontalGroup(
             pnlGamePrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGamePrevLayout.createSequentialGroup()
                 .addGap(90, 90, 90)
                 .addGroup(pnlGamePrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnlGameImgPrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(_pnlGameImgPrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_pnlInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         pnlGamePrevLayout.setVerticalGroup(
             pnlGamePrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlGamePrevLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(pnlGameImgPrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlGameImgPrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(pnlInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(255, 102, 102));
+        _pnlSeperator.setBackground(new java.awt.Color(255, 102, 102));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(_pnlSeperator);
+        _pnlSeperator.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 11, Short.MAX_VALUE)
@@ -482,53 +498,51 @@ public class GameFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(_pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnlBoardBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(_pnlBoardBtns, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(_pnlSeperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(pnlGamePrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(_pnlGamePrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(pnlGamePrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlBoardBtns, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(_pnlGamePrev, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(_pnlBoardBtns, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(_pnlSeperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(47, 47, 47))
         );
 
-        setSize(new java.awt.Dimension(1000, 600));
-        setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void myInitComponents() {
         timer = new Timer(1000, (ActionEvent ae) -> {
             updateTimelbl();
         });
         addUndo();
         timer.start();
         setVisible(true);
-        pnlBoard.add(_board);
+        _pnlBoard.add(_board);
         pack();
-    }
+        setSize(new java.awt.Dimension(1000, 600));
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
     private void addUndo(){
-                BoardPanel.addKeyBinding(pnlBtns, KeyEvent.VK_Z,InputEvent.CTRL_DOWN_MASK, "undo", (ActionEvent ae) -> {
-            btnUndo.doClick();
+                BoardPanel.addKeyBinding(_pnlBtns, KeyEvent.VK_Z,InputEvent.CTRL_DOWN_MASK, "undo", (ActionEvent ae) -> {
+            _btnUndo.doClick();
         });
     }
     private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
-        btnExit.setBackground(new Color(232, 17, 35));
+        _btnExit.setBackground(new Color(232, 17, 35));
     }//GEN-LAST:event_btnExitMouseEntered
 
     private void btnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseExited
-        btnExit.setBackground(new Color(255, 255, 255));
+        _btnExit.setBackground(new Color(255, 255, 255));
     }//GEN-LAST:event_btnExitMouseExited
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
@@ -536,16 +550,16 @@ public class GameFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void pnlHeaderMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlHeaderMouseDragged
-        if (maximized) {
+        if (_maximized) {
             int x = evt.getXOnScreen();
             int y = evt.getYOnScreen();
-            this.setLocation(x - xMouse, y - yMouse);
+            this.setLocation(x - _xMouse, y - _yMouse);
         }
     }//GEN-LAST:event_pnlHeaderMouseDragged
 
     private void pnlHeaderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlHeaderMousePressed
-        xMouse = evt.getX();
-        yMouse = evt.getY();
+        _xMouse = evt.getX();
+        _yMouse = evt.getY();
     }//GEN-LAST:event_pnlHeaderMousePressed
 
     private void btnUndoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUndoActionPerformed
@@ -570,35 +584,36 @@ public class GameFrame extends javax.swing.JFrame {
      */
     public static String Time()
     {
-    	return lblTimePrev.getText();
+    	return _lblTimePrev.getText();
     }
-    
-    //variables declaration
-    private static boolean maximized = true;
-    private int xMouse;
-    private int yMouse;
+
+    // Variables declaration//GEN-BEGIN:variables
+    private static boolean _maximized = true;
+    private int _xMouse;
+    private int _yMouse;
     private BoardPanel _board;
-    private int seconds = 0;
-    private int minutes = 0;
-    private int hours = 0;
+    //Timer
+    private int _seconds = 0;
+    private int _minutes = 0;
+    private int _hours = 0;
     protected static Timer timer;
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnExit;
-    private javax.swing.JButton btnUndo;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblMoves;
-    private static javax.swing.JLabel lblMovesPrev;
-    private javax.swing.JLabel lblPicPrev;
-    private javax.swing.JLabel lblTime;
-    private static javax.swing.JLabel lblTimePrev;
-    private javax.swing.JPanel pnlBoard;
-    private javax.swing.JPanel pnlBoardBack;
-    private javax.swing.JPanel pnlBoardBtns;
-    private javax.swing.JPanel pnlBtns;
-    private javax.swing.JPanel pnlGameImgPrev;
-    private javax.swing.JPanel pnlGamePrev;
-    private javax.swing.JPanel pnlHeader;
-    private javax.swing.JPanel pnlInfo;
+    //end Timer
+    private JButton _btnBack;
+    private JButton _btnExit;
+    private JButton _btnUndo;
+    private JPanel _pnlSeperator;
+    private JLabel _lblMoves;
+    private static JLabel _lblMovesPrev;
+    private JLabel _lblPicPrev;
+    private JLabel _lblTime;
+    private static JLabel _lblTimePrev;
+    private JPanel _pnlBoard;
+    private JPanel _pnlBoardBack;
+    private JPanel _pnlBoardBtns;
+    private JPanel _pnlBtns;
+    private JPanel _pnlGameImgPrev;
+    private JPanel _pnlGamePrev;
+    private JPanel _pnlHeader;
+    private JPanel _pnlInfo;
     // End of variables declaration//GEN-END:variables
 }

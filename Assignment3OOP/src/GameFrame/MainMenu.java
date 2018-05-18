@@ -6,8 +6,7 @@
 package GameFrame;
 
 import java.awt.Color;
-import java.awt.Frame;
-import java.awt.GraphicsEnvironment;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,28 +15,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
+
+import ImageHandling.ImageHandler;
+
+import CsvReader.ReadCsv;
 
 
-public class MainMenu extends javax.swing.JFrame {
+public class MainMenu extends JFrame {
     
     /**
      * Creates new form MainMenu
      */
     public MainMenu(ReadCsv read) {
-         addInitialImg(imgArr);
+         addInitialImg(_imgArr);
         _read = read;
         _newImage = false;
         initComponents();
-        
+
     }
     
     /**
@@ -53,7 +48,7 @@ public class MainMenu extends javax.swing.JFrame {
      */
     private Integer [][] csvBoard() {
         
-        Integer[][] temp = _read.randomBaord(selSize);
+        Integer[][] temp = _read.randomBaord(_selSize);
 
         for (int i = 0; i < temp.length; i++) {
             for (int j = 0; j < temp.length; j++) {
@@ -70,69 +65,87 @@ public class MainMenu extends javax.swing.JFrame {
      * @param size 
      */
     private void setSizeLbl(String size) {
-        lblSelSize.setText(size + "X" + size);
-        voudEnableStartIfPossibale();
+        _lblSelSize.setText(size + "X" + size);
+        enableStartIfPossible();
     }
     /**
      * adds the initial images to the list of images
      * @param ImgArr 
      */
     private void addInitialImg(String[] ImgArr) {
-        aList = new ArrayList<>(Arrays.asList(ImgArr));
-        model = new DefaultListModel();
-        for (int i = 0; i < aList.size(); i++) {
-            model.addElement(aList.get(i));
+        _aList = new ArrayList<>(Arrays.asList(ImgArr));
+        _model = new DefaultListModel();
+        for (int i = 0; i < _aList.size(); i++) {
+            _model.addElement(_aList.get(i));
         }
         
     }
-    
+    private String addHelpText(){
+        String help ="<html>Welcome to Slider Puzzle!!!<br/><br/>" +
+                "Here are some tips and rules for making your experience more fun:<br/>" +
+                "-----------------------------------------------------------------------------------------------------------------" +
+                "<br/>GENERAL DESCRIPTION: The game consist of sliding parts of an image to it's right position," +
+                "<br/>to do so you can use the arrows on your keyBoard or click on the image you wish to move.</br>" +
+                "<br/>In order to undo your last moves you can press CTRL+Z or click on the undo Button.</br>" +
+                "<br/><br/>Choosing Image and Size: In the Image & Size tab you can choose from a 3 default images we provided," +
+                "<br/> or you can upload your own image.<br/> You can also choose an image randomly from the deafult images" +
+                " by clicking on the Random button. " +
+                "<br/> NOTICE: uploaded images must by in jpeg/jpg format only<br/>" +
+                "<br/>For Choosing size there are few possibilities:<br/>1. if you choose our default images you must choose from" +
+                " our provided sizes.<br/> 2. if you uploaded an images you must choose from provided sizes, or enter a size that is grater than 1." +
+                "<br/><br/>Board Representation : In the Preview Tab you can either choose to use CSV file or shuffle" +
+                " randomly the board,<br/> either one will determine how the board will be presented in the game." +
+                "<br/><br/>At any time you can Exit the game via the X button on the top of the Screen, <br/> you can also return to the Main Menu" +
+                " when you are in game session.<br/>NOTICE: this action will end the current game.";
+        return help;
+    }
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="initialization">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        BgroupSize = new javax.swing.ButtonGroup();
-        BgroupUse = new javax.swing.ButtonGroup();
-        pnlMenu = new javax.swing.JPanel();
-        btnTimeline = new javax.swing.JButton();
-        lblTimeline = new javax.swing.JLabel();
-        lblSelMenu = new javax.swing.JLabel();
-        btnSelMenu = new javax.swing.JButton();
-        lblHelp = new javax.swing.JLabel();
-        btnHelp = new javax.swing.JButton();
-        lblWelcome = new javax.swing.JLabel();
-        lblCreatedBy = new javax.swing.JLabel();
-        pnlBody = new javax.swing.JPanel();
-        pnlPreview = new javax.swing.JPanel();
-        pnlSelectedimg = new javax.swing.JPanel();
-        lblSelImg = new javax.swing.JLabel();
-        lblSelPreview = new javax.swing.JLabel();
-        pnlStart = new javax.swing.JPanel();
-        btnStart = new javax.swing.JButton();
-        lblShuffleBoard = new javax.swing.JRadioButton();
-        lblUseCsv = new javax.swing.JRadioButton();
-        pnlSelecedSize = new javax.swing.JPanel();
-        lblSize = new javax.swing.JLabel();
-        lblSelSize = new javax.swing.JLabel();
-        pnlSelection = new javax.swing.JPanel();
-        pnlSelimg = new javax.swing.JPanel();
-        btnAddImg = new javax.swing.JButton();
-        lblSelImgPlease = new javax.swing.JLabel();
-        imgListSP = new javax.swing.JScrollPane();
-        imgList = new javax.swing.JList<>();
-        pnlImagePrev = new javax.swing.JPanel();
-        lblImgSelPrev = new javax.swing.JLabel();
-        btnRandImg = new javax.swing.JButton();
-        pnlSelSize = new javax.swing.JPanel();
-        lblSelSizeMenu = new javax.swing.JLabel();
-        lblSize3 = new javax.swing.JRadioButton();
-        lblSize4 = new javax.swing.JRadioButton();
-        lblSize5 = new javax.swing.JRadioButton();
+        _BgroupSize = new javax.swing.ButtonGroup();
+        _BgroupUse = new javax.swing.ButtonGroup();
+        _pnlMenu = new javax.swing.JPanel();
+        _btnTimeline = new javax.swing.JButton();
+        _lblTimeline = new javax.swing.JLabel();
+        _lblSelMenu = new javax.swing.JLabel();
+        _btnSelMenu = new javax.swing.JButton();
+        _lblHelp = new javax.swing.JLabel();
+        _btnHelp = new javax.swing.JButton();
+        _lblWelcome = new javax.swing.JLabel();
+        _lblCreatedBy = new javax.swing.JLabel();
+        _pnlBody = new javax.swing.JPanel();
+        _pnlPreview = new javax.swing.JPanel();
+        _pnlSelectedimg = new javax.swing.JPanel();
+        _lblSelImg = new javax.swing.JLabel();
+        _lblSelPreview = new javax.swing.JLabel();
+        _pnlStart = new javax.swing.JPanel();
+        _btnStart = new javax.swing.JButton();
+        _lblShuffleBoard = new javax.swing.JRadioButton();
+        _lblUseCsv = new javax.swing.JRadioButton();
+        _pnlSelecedSize = new javax.swing.JPanel();
+        _lblSize = new javax.swing.JLabel();
+        _lblSelSize = new javax.swing.JLabel();
+        _pnlSelection = new javax.swing.JPanel();
+        _pnlSelimg = new javax.swing.JPanel();
+        _btnAddImg = new javax.swing.JButton();
+        _lblSelImgPlease = new javax.swing.JLabel();
+        _imgListSP = new javax.swing.JScrollPane();
+        _imgList = new javax.swing.JList<>();
+        _pnlImagePrev = new javax.swing.JPanel();
+        _lblImgSelPrev = new javax.swing.JLabel();
+        _btnRandImg = new javax.swing.JButton();
+        _pnlSelSize = new javax.swing.JPanel();
+        _lblSelSizeMenu = new javax.swing.JLabel();
+        _lblSize3 = new javax.swing.JRadioButton();
+        _lblSize4 = new javax.swing.JRadioButton();
+        _lblSize5 = new javax.swing.JRadioButton();
         _lblEnterSIze = new javax.swing.JRadioButton();
         _tfEnterSize = new javax.swing.JTextField();
-        pnlHelp = new javax.swing.JPanel();
-        lblHelpMeu = new javax.swing.JLabel();
-        pnlHeader = new javax.swing.JPanel();
-        btnExit = new javax.swing.JButton();
+        _pnlHelp = new javax.swing.JPanel();
+        _lblHelpMenu = new javax.swing.JLabel(addHelpText());
+        _pnlHeader = new javax.swing.JPanel();
+        _btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Main Menu");
@@ -142,195 +155,195 @@ public class MainMenu extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(1000, 600));
         this.setVisible(true);
 
-        pnlMenu.setBackground(new java.awt.Color(255, 146, 154));
+        _pnlMenu.setBackground(new java.awt.Color(255, 146, 154));
 
-        btnTimeline.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 16)); // NOI18N
-        btnTimeline.setForeground(new java.awt.Color(44, 62, 80));
-        btnTimeline.setText("Preview");
-        btnTimeline.setContentAreaFilled(false);
-        btnTimeline.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnTimeline.setFocusable(false);
-        btnTimeline.addActionListener(new java.awt.event.ActionListener() {
+        _btnTimeline.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 16)); // NOI18N
+        _btnTimeline.setForeground(new java.awt.Color(44, 62, 80));
+        _btnTimeline.setText("Preview");
+        _btnTimeline.setContentAreaFilled(false);
+        _btnTimeline.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        _btnTimeline.setFocusable(false);
+        _btnTimeline.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnTimelineActionPerformed(evt);
             }
         });
 
-        lblTimeline.setBackground(new java.awt.Color(0, 204, 106));
-        lblTimeline.setOpaque(true);
+        _lblTimeline.setBackground(new java.awt.Color(0, 204, 106));
+        _lblTimeline.setOpaque(true);
 
-        lblSelMenu.setBackground(new java.awt.Color(255, 255, 255));
-        lblSelMenu.setOpaque(true);
+        _lblSelMenu.setBackground(new java.awt.Color(255, 255, 255));
+        _lblSelMenu.setOpaque(true);
 
-        btnSelMenu.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 16)); // NOI18N
-        btnSelMenu.setForeground(new java.awt.Color(44, 62, 80));
-        btnSelMenu.setText("Image & Size");
-        btnSelMenu.setContentAreaFilled(false);
-        btnSelMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnSelMenu.setFocusable(false);
-        btnSelMenu.addActionListener(new java.awt.event.ActionListener() {
+        _btnSelMenu.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 16)); // NOI18N
+        _btnSelMenu.setForeground(new java.awt.Color(44, 62, 80));
+        _btnSelMenu.setText("Image & Size");
+        _btnSelMenu.setContentAreaFilled(false);
+        _btnSelMenu.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        _btnSelMenu.setFocusable(false);
+        _btnSelMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSelMenuActionPerformed(evt);
             }
         });    
         
-        lblHelp.setBackground(new java.awt.Color(255, 255, 255));
-        lblHelp.setOpaque(true);
+        _lblHelp.setBackground(new java.awt.Color(255, 255, 255));
+        _lblHelp.setOpaque(true);
 
-        btnHelp.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 16)); // NOI18N
-        btnHelp.setForeground(new java.awt.Color(44, 62, 80));
-        btnHelp.setText("HELP");
-        btnHelp.setContentAreaFilled(false);
-        btnHelp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnHelp.setFocusable(false);
-        btnHelp.addActionListener(new java.awt.event.ActionListener() {
+        _btnHelp.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 16)); // NOI18N
+        _btnHelp.setForeground(new java.awt.Color(44, 62, 80));
+        _btnHelp.setText("HELP");
+        _btnHelp.setContentAreaFilled(false);
+        _btnHelp.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        _btnHelp.setFocusable(false);
+        _btnHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnHelpActionPerformed(evt);
             }
         });
 
-        lblWelcome.setFont(new java.awt.Font("Pristina", 0, 48)); // NOI18N
-        lblWelcome.setForeground(new java.awt.Color(0, 0, 102));
-        lblWelcome.setText("Welcome to Slider Puzzle");
+        _lblWelcome.setFont(new java.awt.Font("Pristina", 0, 35)); // NOI18N
+        _lblWelcome.setForeground(new java.awt.Color(0, 0, 102));
+        _lblWelcome.setText("Welcome to Slider Puzzle");
 
-        lblCreatedBy.setFont(new java.awt.Font("Microsoft Sans Serif", 3, 12)); // NOI18N
-        lblCreatedBy.setForeground(new java.awt.Color(255, 51, 51));
-        lblCreatedBy.setText("@created by: tal barzilay & roy levy");
+        _lblCreatedBy.setFont(new java.awt.Font("Microsoft Sans Serif", 3, 12)); // NOI18N
+        _lblCreatedBy.setForeground(new java.awt.Color(255, 51, 51));
+        _lblCreatedBy.setText("@created by: tal barzilay & roy levy");
 
-        javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
-        pnlMenu.setLayout(pnlMenuLayout);
+        javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(_pnlMenu);
+        _pnlMenu.setLayout(pnlMenuLayout);
         pnlMenuLayout.setHorizontalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblTimeline, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnTimeline))
+                    .addComponent(_lblTimeline, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_btnTimeline))
                 .addGap(0, 0, 0)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblSelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSelMenu))
+                    .addComponent(_lblSelMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_btnSelMenu))
                 .addGap(0, 0, 0)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblHelp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnHelp))
+                    .addComponent(_lblHelp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_btnHelp))
                 .addGap(416, 416, 416)
-                .addComponent(lblCreatedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblCreatedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(59, 59, 59))
             .addGroup(pnlMenuLayout.createSequentialGroup()
                 .addGap(305, 305, 305)
-                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlMenuLayout.setVerticalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMenuLayout.createSequentialGroup()
                 .addContainerGap(19, Short.MAX_VALUE)
-                .addComponent(lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblWelcome, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlMenuLayout.createSequentialGroup()
                         .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnHelp)
-                            .addComponent(lblCreatedBy, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(_btnHelp)
+                            .addComponent(_lblCreatedBy, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(0, 0, 0)
-                        .addComponent(lblHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(_lblHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
-                            .addComponent(btnTimeline)
+                            .addComponent(_btnTimeline)
                             .addGap(0, 0, 0)
-                            .addComponent(lblTimeline, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(_lblTimeline, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
-                            .addComponent(btnSelMenu)
+                            .addComponent(_btnSelMenu)
                             .addGap(0, 0, 0)
-                            .addComponent(lblSelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(_lblSelMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
 
-        pnlBody.setBackground(new java.awt.Color(204, 255, 255));
-        pnlBody.setLayout(new java.awt.CardLayout());
+        _pnlBody.setBackground(new java.awt.Color(204, 255, 255));
+        _pnlBody.setLayout(new java.awt.CardLayout());
 
-        pnlPreview.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlPreview.setBackground(new java.awt.Color(153, 204, 255));
 
-        pnlSelectedimg.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlSelectedimg.setBackground(new java.awt.Color(153, 204, 255));
 
-        lblSelImg.setBackground(new java.awt.Color(153, 204, 255));
-        lblSelImg.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        lblSelImg.setForeground(new java.awt.Color(0, 102, 102));
-        lblSelImg.setText("Selceted Image");
+        _lblSelImg.setBackground(new java.awt.Color(153, 204, 255));
+        _lblSelImg.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _lblSelImg.setForeground(new java.awt.Color(0, 102, 102));
+        _lblSelImg.setText("Selceted Image");
 
-        lblSelPreview.setBackground(new java.awt.Color(153, 204, 255));
+        _lblSelPreview.setBackground(new java.awt.Color(153, 204, 255));
 
-        pnlStart.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlStart.setBackground(new java.awt.Color(153, 204, 255));
 
-        btnStart.setBackground(new java.awt.Color(153, 204, 255));
-        btnStart.setFont(new java.awt.Font("Rockwell", 2, 24)); // NOI18N
-        btnStart.setForeground(new java.awt.Color(102, 0, 102));
-        btnStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-play-50.png"))); // NOI18N
-        btnStart.setText("Start");
-        btnStart.setEnabled(false);
-        btnStart.addActionListener(new java.awt.event.ActionListener() {
+        _btnStart.setBackground(new java.awt.Color(153, 204, 255));
+        _btnStart.setFont(new java.awt.Font("Rockwell", 2, 24)); // NOI18N
+        _btnStart.setForeground(new java.awt.Color(102, 0, 102));
+        _btnStart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-play-50.png"))); // NOI18N
+        _btnStart.setText("Start");
+        _btnStart.setEnabled(false);
+        _btnStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnStartActionPerformed(evt);
             }
         });
 
-        lblShuffleBoard.setBackground(new java.awt.Color(153, 204, 255));
-        BgroupUse.add(lblShuffleBoard);
-        lblShuffleBoard.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        lblShuffleBoard.setForeground(new java.awt.Color(0, 102, 102));
-        lblShuffleBoard.setText("Shuffle Board?");
-        lblShuffleBoard.addActionListener(new java.awt.event.ActionListener() {
+        _lblShuffleBoard.setBackground(new java.awt.Color(153, 204, 255));
+        _BgroupUse.add(_lblShuffleBoard);
+        _lblShuffleBoard.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _lblShuffleBoard.setForeground(new java.awt.Color(0, 102, 102));
+        _lblShuffleBoard.setText("Shuffle Board?");
+        _lblShuffleBoard.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lblShuffleBoardActionPerformed(evt);
             }
         });
 
-        lblUseCsv.setBackground(new java.awt.Color(153, 204, 255));
-        BgroupUse.add(lblUseCsv);
-        lblUseCsv.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        lblUseCsv.setForeground(new java.awt.Color(0, 102, 102));
-        lblUseCsv.setText("Use Csv?");
-        lblUseCsv.addActionListener(new java.awt.event.ActionListener() {
+        _lblUseCsv.setBackground(new java.awt.Color(153, 204, 255));
+        _BgroupUse.add(_lblUseCsv);
+        _lblUseCsv.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _lblUseCsv.setForeground(new java.awt.Color(0, 102, 102));
+        _lblUseCsv.setText("Use Csv?");
+        _lblUseCsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lblUseCsvActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout pnlStartLayout = new javax.swing.GroupLayout(pnlStart);
-        pnlStart.setLayout(pnlStartLayout);
+        javax.swing.GroupLayout pnlStartLayout = new javax.swing.GroupLayout(_pnlStart);
+        _pnlStart.setLayout(pnlStartLayout);
         pnlStartLayout.setHorizontalGroup(
             pnlStartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlStartLayout.createSequentialGroup()
                 .addGroup(pnlStartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblShuffleBoard)
-                    .addComponent(lblUseCsv))
+                    .addComponent(_btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(_lblShuffleBoard)
+                    .addComponent(_lblUseCsv))
                 .addGap(0, 196, Short.MAX_VALUE))
         );
         pnlStartLayout.setVerticalGroup(
             pnlStartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlStartLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_btnStart, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
-                .addComponent(lblShuffleBoard)
+                .addComponent(_lblShuffleBoard)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblUseCsv)
+                .addComponent(_lblUseCsv)
                 .addGap(0, 40, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout pnlSelectedimgLayout = new javax.swing.GroupLayout(pnlSelectedimg);
-        pnlSelectedimg.setLayout(pnlSelectedimgLayout);
+        javax.swing.GroupLayout pnlSelectedimgLayout = new javax.swing.GroupLayout(_pnlSelectedimg);
+        _pnlSelectedimg.setLayout(pnlSelectedimgLayout);
         pnlSelectedimgLayout.setHorizontalGroup(
             pnlSelectedimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelectedimgLayout.createSequentialGroup()
                 .addGroup(pnlSelectedimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSelImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(_lblSelImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnlSelectedimgLayout.createSequentialGroup()
-                        .addComponent(lblSelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(_lblSelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(42, 42, 42)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         pnlSelectedimgLayout.setVerticalGroup(
@@ -338,55 +351,55 @@ public class MainMenu extends javax.swing.JFrame {
             .addGroup(pnlSelectedimgLayout.createSequentialGroup()
                 .addGroup(pnlSelectedimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlSelectedimgLayout.createSequentialGroup()
-                        .addComponent(lblSelImg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(_lblSelImg, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblSelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(_lblSelPreview, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnlSelectedimgLayout.createSequentialGroup()
                         .addGap(44, 44, 44)
-                        .addComponent(pnlStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(_pnlStart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
-        pnlSelecedSize.setBackground(new java.awt.Color(153, 204, 255));
-        pnlSelecedSize.setForeground(new java.awt.Color(102, 0, 102));
+        _pnlSelecedSize.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlSelecedSize.setForeground(new java.awt.Color(102, 0, 102));
 
-        lblSize.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        lblSize.setForeground(new java.awt.Color(0, 102, 102));
-        lblSize.setText("Size");
+        _lblSize.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _lblSize.setForeground(new java.awt.Color(0, 102, 102));
+        _lblSize.setText("Size");
 
-        lblSelSize.setFont(new java.awt.Font("MV Boli", 0, 36)); // NOI18N
-        lblSelSize.setForeground(new java.awt.Color(102, 0, 102));
+        _lblSelSize.setFont(new java.awt.Font("MV Boli", 0, 18)); // NOI18N
+        _lblSelSize.setForeground(new java.awt.Color(102, 0, 102));
 
-        javax.swing.GroupLayout pnlSelecedSizeLayout = new javax.swing.GroupLayout(pnlSelecedSize);
-        pnlSelecedSize.setLayout(pnlSelecedSizeLayout);
+        javax.swing.GroupLayout pnlSelecedSizeLayout = new javax.swing.GroupLayout(_pnlSelecedSize);
+        _pnlSelecedSize.setLayout(pnlSelecedSizeLayout);
         pnlSelecedSizeLayout.setHorizontalGroup(
             pnlSelecedSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelecedSizeLayout.createSequentialGroup()
                 .addGap(75, 75, 75)
                 .addGroup(pnlSelecedSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSize))
+                    .addComponent(_lblSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(_lblSize))
                 .addContainerGap(100, Short.MAX_VALUE))
         );
         pnlSelecedSizeLayout.setVerticalGroup(
             pnlSelecedSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelecedSizeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblSize)
+                .addComponent(_lblSize)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout pnlPreviewLayout = new javax.swing.GroupLayout(pnlPreview);
-        pnlPreview.setLayout(pnlPreviewLayout);
+        javax.swing.GroupLayout pnlPreviewLayout = new javax.swing.GroupLayout(_pnlPreview);
+        _pnlPreview.setLayout(pnlPreviewLayout);
         pnlPreviewLayout.setHorizontalGroup(
             pnlPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPreviewLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(pnlSelecedSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlSelecedSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(57, 57, 57)
-                .addComponent(pnlSelectedimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlSelectedimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlPreviewLayout.setVerticalGroup(
@@ -394,32 +407,32 @@ public class MainMenu extends javax.swing.JFrame {
             .addGroup(pnlPreviewLayout.createSequentialGroup()
                 .addContainerGap(58, Short.MAX_VALUE)
                 .addGroup(pnlPreviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlSelectedimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pnlSelecedSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(_pnlSelectedimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(_pnlSelecedSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
-        pnlBody.add(pnlPreview, "card2");
+        _pnlBody.add(_pnlPreview, "card2");
 
-        pnlSelection.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlSelection.setBackground(new java.awt.Color(153, 204, 255));
 
-        pnlSelimg.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlSelimg.setBackground(new java.awt.Color(153, 204, 255));
 
-        btnAddImg.setBackground(new java.awt.Color(153, 204, 255));
-        btnAddImg.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        btnAddImg.setForeground(new java.awt.Color(102, 0, 102));
-        btnAddImg.setText("Add Image");
+        _btnAddImg.setBackground(new java.awt.Color(153, 204, 255));
+        _btnAddImg.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _btnAddImg.setForeground(new java.awt.Color(153, 0, 255));
+        _btnAddImg.setText("Add Image");
+
         
         
         
         
         
-        
-        btnAddImg.addActionListener( new ActionListener() {
+        _btnAddImg.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+                try{
 				JFileChooser chooser = new JFileChooser();
 				chooser.showOpenDialog(null);
 				File f = chooser.getSelectedFile();
@@ -427,10 +440,10 @@ public class MainMenu extends javax.swing.JFrame {
 				
 				String[] temp = s.split(Pattern.quote("."));
 				
-				if(temp.length == 0 || !temp[temp.length -1].equals("jpeg"))
+				if(temp.length == 0 || !temp[temp.length -1].equals("jpg") & !temp[temp.length -1].equals("jpeg"))
 				{
 					JOptionPane.showMessageDialog(null,
-		                    "Please upload a JPEG file only", "Not valid photo", JOptionPane.ERROR_MESSAGE);
+		                    "Please upload a JPEG/JPG file only", "Not valid photo", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				
@@ -438,16 +451,18 @@ public class MainMenu extends javax.swing.JFrame {
 				ImageIcon imgIc = new ImageIcon(s);
 			    Image img = imgIc.getImage();
 			    
-			    Image scImg = img.getScaledInstance(lblImgSelPrev.getWidth(), lblImgSelPrev.getHeight(), Image.SCALE_SMOOTH);				
-				lblImgSelPrev.setIcon(new ImageIcon(scImg));
+			    Image scImg = img.getScaledInstance(_lblImgSelPrev.getWidth(), _lblImgSelPrev.getHeight(), Image.SCALE_SMOOTH);
+				_lblImgSelPrev.setIcon(new ImageIcon(scImg));
 				
-				scImg = img.getScaledInstance(lblImgSelPrev.getWidth(), lblImgSelPrev.getHeight(), Image.SCALE_SMOOTH);
-				lblSelPreview.setIcon(new ImageIcon(scImg));		
+				scImg = img.getScaledInstance(_lblImgSelPrev.getWidth(), _lblImgSelPrev.getHeight(), Image.SCALE_SMOOTH);
+				_lblSelPreview.setIcon(new ImageIcon(scImg));
 				
 				_newImage = true;
 				_newImagePath = s;
-				
+                }
+                catch(Exception exp){}
 			}});
+
         
         
         
@@ -455,23 +470,23 @@ public class MainMenu extends javax.swing.JFrame {
         
         
 
-        lblSelImgPlease.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        lblSelImgPlease.setForeground(new java.awt.Color(0, 102, 102));
-        lblSelImgPlease.setText("Please Select an Image");
+        _lblSelImgPlease.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _lblSelImgPlease.setForeground(new java.awt.Color(0, 102, 102));
+        _lblSelImgPlease.setText("Please Select an Image");
 
-        imgList.setFont(new java.awt.Font("MV Boli", 0, 18)); // NOI18N
-        imgList.setModel(model);
-        imgList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        imgList.setSelectedIndex(0);
-        imgList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        _imgList.setFont(new java.awt.Font("MV Boli", 0, 18)); // NOI18N
+        _imgList.setModel(_model);
+        _imgList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        _imgList.setSelectedIndex(0);
+        _imgList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 imgListValueChanged(evt);
             }
         });
-        imgListSP.setViewportView(imgList);
+        _imgListSP.setViewportView(_imgList);
 
-        javax.swing.GroupLayout pnlSelimgLayout = new javax.swing.GroupLayout(pnlSelimg);
-        pnlSelimg.setLayout(pnlSelimgLayout);
+        javax.swing.GroupLayout pnlSelimgLayout = new javax.swing.GroupLayout(_pnlSelimg);
+        _pnlSelimg.setLayout(pnlSelimgLayout);
         pnlSelimgLayout.setHorizontalGroup(
             pnlSelimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelimgLayout.createSequentialGroup()
@@ -481,98 +496,98 @@ public class MainMenu extends javax.swing.JFrame {
                         .addGroup(pnlSelimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlSelimgLayout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(imgListSP, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblSelImgPlease)))
+                                .addComponent(_imgListSP, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(_lblSelImgPlease)))
                     .addGroup(pnlSelimgLayout.createSequentialGroup()
                         .addGap(66, 66, 66)
-                        .addComponent(btnAddImg, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(_btnAddImg, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 86, Short.MAX_VALUE))
         );
         pnlSelimgLayout.setVerticalGroup(
             pnlSelimgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelimgLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblSelImgPlease)
+                .addComponent(_lblSelImgPlease)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(imgListSP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_imgListSP, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAddImg, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_btnAddImg, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
-        pnlImagePrev.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlImagePrev.setBackground(new java.awt.Color(153, 204, 255));
 
-        btnRandImg.setBackground(new java.awt.Color(153, 204, 255));
-        btnRandImg.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
-        btnRandImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-shuffle-64.png"))); // NOI18N
-        btnRandImg.addActionListener(new java.awt.event.ActionListener() {
+        _btnRandImg.setBackground(new java.awt.Color(153, 204, 255));
+        _btnRandImg.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
+        _btnRandImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/icons8-shuffle-64.png"))); // NOI18N
+        _btnRandImg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRandImgActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout pnlImagePrevLayout = new javax.swing.GroupLayout(pnlImagePrev);
-        pnlImagePrev.setLayout(pnlImagePrevLayout);
+        javax.swing.GroupLayout pnlImagePrevLayout = new javax.swing.GroupLayout(_pnlImagePrev);
+        _pnlImagePrev.setLayout(pnlImagePrevLayout);
         pnlImagePrevLayout.setHorizontalGroup(
             pnlImagePrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlImagePrevLayout.createSequentialGroup()
-                .addComponent(lblImgSelPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblImgSelPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 43, Short.MAX_VALUE))
             .addGroup(pnlImagePrevLayout.createSequentialGroup()
                 .addGap(73, 73, 73)
-                .addComponent(btnRandImg, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_btnRandImg, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlImagePrevLayout.setVerticalGroup(
             pnlImagePrevLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlImagePrevLayout.createSequentialGroup()
-                .addComponent(lblImgSelPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblImgSelPrev, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnRandImg, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_btnRandImg, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
-        pnlSelSize.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlSelSize.setBackground(new java.awt.Color(153, 204, 255));
 
-        lblSelSizeMenu.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
-        lblSelSizeMenu.setForeground(new java.awt.Color(0, 102, 102));
-        lblSelSizeMenu.setText("Select Puzzle Size");
+        _lblSelSizeMenu.setFont(new java.awt.Font("Rockwell", 0, 18)); // NOI18N
+        _lblSelSizeMenu.setForeground(new java.awt.Color(0, 102, 102));
+        _lblSelSizeMenu.setText("Select Puzzle Size");
 
-        lblSize3.setBackground(new java.awt.Color(153, 204, 255));
-        BgroupSize.add(lblSize3);
-        lblSize3.setFont(new java.awt.Font("Rockwell", 2, 14)); // NOI18N
-        lblSize3.setForeground(new java.awt.Color(102, 0, 102));
-        lblSize3.setText("3X3");
-        lblSize3.addActionListener(new java.awt.event.ActionListener() {
+        _lblSize3.setBackground(new java.awt.Color(153, 204, 255));
+        _BgroupSize.add(_lblSize3);
+        _lblSize3.setFont(new java.awt.Font("Rockwell", 2, 14)); // NOI18N
+        _lblSize3.setForeground(new java.awt.Color(102, 0, 102));
+        _lblSize3.setText("3X3");
+        _lblSize3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lblSize3ActionPerformed(evt);
             }
         });
 
-        lblSize4.setBackground(new java.awt.Color(153, 204, 255));
-        BgroupSize.add(lblSize4);
-        lblSize4.setFont(new java.awt.Font("Rockwell", 2, 14)); // NOI18N
-        lblSize4.setForeground(new java.awt.Color(102, 0, 102));
-        lblSize4.setText("4X4");
-        lblSize4.addActionListener(new java.awt.event.ActionListener() {
+        _lblSize4.setBackground(new java.awt.Color(153, 204, 255));
+        _BgroupSize.add(_lblSize4);
+        _lblSize4.setFont(new java.awt.Font("Rockwell", 2, 14)); // NOI18N
+        _lblSize4.setForeground(new java.awt.Color(102, 0, 102));
+        _lblSize4.setText("4X4");
+        _lblSize4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lblSize4ActionPerformed(evt);
             }
         });
 
-        lblSize5.setBackground(new java.awt.Color(153, 204, 255));
-        BgroupSize.add(lblSize5);
-        lblSize5.setFont(new java.awt.Font("Rockwell", 2, 14)); // NOI18N
-        lblSize5.setForeground(new java.awt.Color(102, 0, 102));
-        lblSize5.setText("5X5");
-        lblSize5.addActionListener(new java.awt.event.ActionListener() {
+        _lblSize5.setBackground(new java.awt.Color(153, 204, 255));
+        _BgroupSize.add(_lblSize5);
+        _lblSize5.setFont(new java.awt.Font("Rockwell", 2, 14)); // NOI18N
+        _lblSize5.setForeground(new java.awt.Color(102, 0, 102));
+        _lblSize5.setText("5X5");
+        _lblSize5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lblSize5ActionPerformed(evt);
             }
         });
 
         _lblEnterSIze.setBackground(new java.awt.Color(153, 204, 255));
-        BgroupSize.add(_lblEnterSIze);
+        _BgroupSize.add(_lblEnterSIze);
         _lblEnterSIze.setFont(new java.awt.Font("Rockwell", 0, 14)); // NOI18N
         _lblEnterSIze.setForeground(new java.awt.Color(102, 0, 102));
         _lblEnterSIze.setText("Enter Size");
@@ -589,8 +604,8 @@ public class MainMenu extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout pnlSelSizeLayout = new javax.swing.GroupLayout(pnlSelSize);
-        pnlSelSize.setLayout(pnlSelSizeLayout);
+        javax.swing.GroupLayout pnlSelSizeLayout = new javax.swing.GroupLayout(_pnlSelSize);
+        _pnlSelSize.setLayout(pnlSelSizeLayout);
         pnlSelSizeLayout.setHorizontalGroup(
             pnlSelSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelSizeLayout.createSequentialGroup()
@@ -598,27 +613,27 @@ public class MainMenu extends javax.swing.JFrame {
                     .addGroup(pnlSelSizeLayout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(pnlSelSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lblSize4)
-                            .addComponent(lblSize3)
-                            .addComponent(lblSize5)
+                            .addComponent(_lblSize4)
+                            .addComponent(_lblSize3)
+                            .addComponent(_lblSize5)
                             .addComponent(_lblEnterSIze, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(_tfEnterSize)))
                     .addGroup(pnlSelSizeLayout.createSequentialGroup()
                         .addGap(81, 81, 81)
-                        .addComponent(lblSelSizeMenu)))
+                        .addComponent(_lblSelSizeMenu)))
                 .addContainerGap(65, Short.MAX_VALUE))
         );
         pnlSelSizeLayout.setVerticalGroup(
             pnlSelSizeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelSizeLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addComponent(lblSelSizeMenu)
+                .addComponent(_lblSelSizeMenu)
                 .addGap(32, 32, 32)
-                .addComponent(lblSize3)
+                .addComponent(_lblSize3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblSize4)
+                .addComponent(_lblSize4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblSize5)
+                .addComponent(_lblSize5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(_lblEnterSIze)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -626,17 +641,17 @@ public class MainMenu extends javax.swing.JFrame {
                 .addContainerGap(82, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout pnlSelectionLayout = new javax.swing.GroupLayout(pnlSelection);
-        pnlSelection.setLayout(pnlSelectionLayout);
+        javax.swing.GroupLayout pnlSelectionLayout = new javax.swing.GroupLayout(_pnlSelection);
+        _pnlSelection.setLayout(pnlSelectionLayout);
         pnlSelectionLayout.setHorizontalGroup(
             pnlSelectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSelectionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlSelimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlSelimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(pnlImagePrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlImagePrev, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
-                .addComponent(pnlSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         pnlSelectionLayout.setVerticalGroup(
@@ -646,58 +661,60 @@ public class MainMenu extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlSelectionLayout.createSequentialGroup()
                         .addGap(66, 66, 66)
                         .addGroup(pnlSelectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pnlImagePrev, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(_pnlSelSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(_pnlImagePrev, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(pnlSelectionLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlSelimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(_pnlSelimg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(64, 64, 64))
         );
 
-        pnlBody.add(pnlSelection, "card3");
+        _pnlBody.add(_pnlSelection, "card3");
 
-        pnlHelp.setBackground(new java.awt.Color(153, 204, 255));
+        _pnlHelp.setBackground(new java.awt.Color(153, 204, 255));
 
-        lblHelpMeu.setBackground(new java.awt.Color(153, 204, 255));
+        _lblHelpMenu.setBackground(new java.awt.Color(153, 204, 255));
+        _lblHelpMenu.setFont(new java.awt.Font("Eras Demi ITC", 0, 14)); // NOI18N
+        _lblHelpMenu.setForeground(new java.awt.Color(44, 62, 80));
 
-        javax.swing.GroupLayout pnlHelpLayout = new javax.swing.GroupLayout(pnlHelp);
-        pnlHelp.setLayout(pnlHelpLayout);
+        javax.swing.GroupLayout pnlHelpLayout = new javax.swing.GroupLayout(_pnlHelp);
+        _pnlHelp.setLayout(pnlHelpLayout);
         pnlHelpLayout.setHorizontalGroup(
             pnlHelpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlHelpLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
-                .addComponent(lblHelpMeu, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblHelpMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 809, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(184, Short.MAX_VALUE))
         );
         pnlHelpLayout.setVerticalGroup(
             pnlHelpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlHelpLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(lblHelpMeu, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_lblHelpMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        pnlBody.add(pnlHelp, "card4");
+        _pnlBody.add(_pnlHelp, "card4");
 
-        pnlHeader.setBackground(new java.awt.Color(255, 255, 255));
-        pnlHeader.setForeground(new java.awt.Color(255, 255, 255));
-        pnlHeader.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+        _pnlHeader.setBackground(new java.awt.Color(255, 255, 255));
+        _pnlHeader.setForeground(new java.awt.Color(255, 255, 255));
+        _pnlHeader.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 pnlHeaderMouseDragged(evt);
             }
         });
-        pnlHeader.addMouseListener(new java.awt.event.MouseAdapter() {
+        _pnlHeader.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 pnlHeaderMousePressed(evt);
             }
         });
 
-        btnExit.setBackground(new java.awt.Color(255, 255, 255));
-        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/Exit.png"))); // NOI18N
-        btnExit.setContentAreaFilled(false);
-        btnExit.setFocusable(false);
-        btnExit.setOpaque(true);
-        btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
+        _btnExit.setBackground(new java.awt.Color(255, 255, 255));
+        _btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/UIres/Exit.png"))); // NOI18N
+        _btnExit.setContentAreaFilled(false);
+        _btnExit.setFocusable(false);
+        _btnExit.setOpaque(true);
+        _btnExit.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btnExitMouseEntered(evt);
             }
@@ -705,44 +722,44 @@ public class MainMenu extends javax.swing.JFrame {
                 btnExitMouseExited(evt);
             }
         });
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
+        _btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(pnlHeader);
-        pnlHeader.setLayout(pnlHeaderLayout);
+        javax.swing.GroupLayout pnlHeaderLayout = new javax.swing.GroupLayout(_pnlHeader);
+        _pnlHeader.setLayout(pnlHeaderLayout);
         pnlHeaderLayout.setHorizontalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlHeaderLayout.createSequentialGroup()
                 .addContainerGap(942, Short.MAX_VALUE)
-                .addComponent(btnExit)
+                .addComponent(_btnExit)
                 .addContainerGap())
         );
         pnlHeaderLayout.setVerticalGroup(
             pnlHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(_btnExit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(_pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(_pnlBody, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(_pnlHeader, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(_pnlMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(_pnlBody, javax.swing.GroupLayout.PREFERRED_SIZE, 442, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         setSize(new java.awt.Dimension(1000, 600));
@@ -761,21 +778,17 @@ public class MainMenu extends javax.swing.JFrame {
     		if(_useCsv)
     		{
     			if(_newImage)
-    			{
-    				JOptionPane.showMessageDialog(null,
-    	                    "custom image is possibale only with random shuffeling!","Failure", JOptionPane.ERROR_MESSAGE);
-    				return;
-    			}
+    				new GameFrame(_newImagePath, csvBoard());
     			else
-    				new GameFrame(ImageHandler.BuildImagesMap(selSize, imgList.getSelectedValue()), csvBoard(), imgList.getSelectedValue());
+    				new GameFrame(ImageHandler.BuildImagesMap(_selSize, _imgList.getSelectedValue()), csvBoard(), _imgList.getSelectedValue());
     		}
     		
     		if (_shuffle)
     		{
     			if(_newImage)
-    				new GameFrame(_newImagePath, selSize);				   				
+    				new GameFrame(_newImagePath, _selSize);
     			else
-    				new GameFrame(selSize, imgList.getSelectedValue());
+    				new GameFrame(_selSize, _imgList.getSelectedValue());
     		}
     	}
     	catch (Exception e) {
@@ -788,82 +801,84 @@ public class MainMenu extends javax.swing.JFrame {
     
     
     private void btnTimelineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimelineActionPerformed
-        lblTimeline.setBackground(new Color(0,204,106));
+        _lblTimeline.setBackground(new Color(0,204,106));
 
-        lblSelMenu.setBackground(new Color(255,255,255));
-        lblHelp.setBackground(new Color(255,255,255));
+        _lblSelMenu.setBackground(new Color(255,255,255));
+        _lblHelp.setBackground(new Color(255,255,255));
 
-        pnlBody.removeAll();
-        pnlBody.repaint();
-        pnlBody.revalidate();
-        pnlBody.add(pnlPreview);
-        pnlBody.repaint();
-        pnlBody.revalidate();
+        _pnlBody.removeAll();
+        _pnlBody.repaint();
+        _pnlBody.revalidate();
+        _pnlBody.add(_pnlPreview);
+        _pnlBody.repaint();
+        _pnlBody.revalidate();
     }//GEN-LAST:event_btnTimelineActionPerformed
 
     private void btnSelMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelMenuActionPerformed
-        lblSelMenu.setBackground(new Color(0,204,106));
+        _lblSelMenu.setBackground(new Color(0,204,106));
 
-        lblTimeline.setBackground(new Color(255,255,255));
-        lblHelp.setBackground(new Color(255,255,255));
+        _lblTimeline.setBackground(new Color(255,255,255));
+        _lblHelp.setBackground(new Color(255,255,255));
 
-        pnlBody.removeAll();
-        pnlBody.repaint();
-        pnlBody.revalidate();
-        pnlBody.add(pnlSelection);
-        pnlBody.repaint();
-        pnlBody.revalidate();
+        _pnlBody.removeAll();
+        _pnlBody.repaint();
+        _pnlBody.revalidate();
+        _pnlBody.add(_pnlSelection);
+        _pnlBody.repaint();
+        _pnlBody.revalidate();
+
+        //updateLabel(_imgArr[0]);
         
     }//GEN-LAST:event_btnSelMenuActionPerformed
 
     private void btnHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHelpActionPerformed
-        lblHelp.setBackground(new Color(0,204,106));
+        _lblHelp.setBackground(new Color(0,204,106));
 
-        lblSelMenu.setBackground(new Color(255,255,255));
-        lblTimeline.setBackground(new Color(255,255,255));
+        _lblSelMenu.setBackground(new Color(255,255,255));
+        _lblTimeline.setBackground(new Color(255,255,255));
 
-        pnlBody.removeAll();
-        pnlBody.repaint();
-        pnlBody.revalidate();
-        pnlBody.add(pnlHelp);
-        pnlBody.repaint();
-        pnlBody.revalidate();
+        _pnlBody.removeAll();
+        _pnlBody.repaint();
+        _pnlBody.revalidate();
+        _pnlBody.add(_pnlHelp);
+        _pnlBody.repaint();
+        _pnlBody.revalidate();
     }//GEN-LAST:event_btnHelpActionPerformed
 
     private void btnRandImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRandImgActionPerformed
-        int index = (int) Math.floor(Math.random() * aList.size());
-        imgList.setSelectedIndex(index);
+        int index = (int) Math.floor(Math.random() * _aList.size());
+        _imgList.setSelectedIndex(index);
     }//GEN-LAST:event_btnRandImgActionPerformed
 
     private void lblSize3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblSize3ActionPerformed
         setSizeLbl("3");
-        selSize = 3;
+        _selSize = 3;
         _tfEnterSize.setEnabled(false);
     }//GEN-LAST:event_lblSize3ActionPerformed
 
     
     private void lblSize5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblSize5ActionPerformed
       setSizeLbl("5");
-      selSize = 5;
+      _selSize = 5;
       _tfEnterSize.setEnabled(false);
     }//GEN-LAST:event_lblSize5ActionPerformed
 
     private void lblSize4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblSize4ActionPerformed
         setSizeLbl("4");
-        selSize = 4;
+        _selSize = 4;
         _tfEnterSize.setEnabled(false);
     }//GEN-LAST:event_lblSize4ActionPerformed
 
     private void imgListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_imgListValueChanged
         JList list = (JList)evt.getSource();
-        updateLabel(imgArr[list.getSelectedIndex()]);
+        updateLabel(_imgArr[list.getSelectedIndex()]);
         
     }//GEN-LAST:event_imgListValueChanged
 
     private void updateLabel(String pic) {
-        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblImgSelPrev);
-        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), lblSelPreview);
-        voudEnableStartIfPossibale();
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), _lblImgSelPrev);
+        ImageHandler.scaledImg(ImageHandler.SavedPhotoPath(pic), _lblSelPreview);
+        enableStartIfPossible();
     }
     private void _lblEnterSIzeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__lblEnterSIzeActionPerformed
     	_tfEnterSize.setEnabled(true);
@@ -878,9 +893,39 @@ public class MainMenu extends javax.swing.JFrame {
        	 }
        	 catch(Exception e)
        	 {
- 			JOptionPane.showMessageDialog(null,
-                    "Your input is not a number", "check input!", JOptionPane.ERROR_MESSAGE);
- 			return;
+ 			try
+ 			{
+ 				String[] temp = _tfEnterSize.getText().split("X");
+ 				
+ 				if(temp.length != 2)
+ 				{
+ 					temp = _tfEnterSize.getText().split("x");
+ 					
+ 					if(temp.length != 2)
+ 	 				{
+ 	 					temp = _tfEnterSize.getText().split("x");
+ 	 					
+ 	 					JOptionPane.showMessageDialog(null,
+ 	 	 	                    "Not valid size!", "check input!", JOptionPane.ERROR_MESSAGE);
+ 	 	 	 			return;
+ 	 				}
+ 				} 				
+ 				
+ 				if(!temp[0].equals(temp[1]))
+ 				{
+ 					JOptionPane.showMessageDialog(null,
+ 	 	                    "Sqares Only!", "check input!", JOptionPane.ERROR_MESSAGE);
+ 	 	 			return;
+ 				}
+ 				
+ 				t = Integer.parseInt(temp[0]);
+ 			}
+ 			 catch(Exception ex)
+ 	       	 {
+ 				JOptionPane.showMessageDialog(null,
+ 	                    "Your input is not a number", "check input!", JOptionPane.ERROR_MESSAGE);
+ 	 			return;
+ 	       	 }
        	 }
 	
          if(t < 2) //Not legal board size
@@ -898,17 +943,17 @@ public class MainMenu extends javax.swing.JFrame {
 		}
 		
 		 setSizeLbl(t.toString());
-         selSize = t;
+         _selSize = t;
 		
 		
     }//GEN-LAST:event__tfEnterSizeActionPerformed
 
     private void btnExitMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseEntered
-        btnExit.setBackground(new Color(232, 17, 35));
+        _btnExit.setBackground(new Color(232, 17, 35));
     }//GEN-LAST:event_btnExitMouseEntered
 
     private void btnExitMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExitMouseExited
-        btnExit.setBackground(new Color(255, 255, 255));
+        _btnExit.setBackground(new Color(255, 255, 255));
     }//GEN-LAST:event_btnExitMouseExited
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
@@ -931,21 +976,25 @@ public class MainMenu extends javax.swing.JFrame {
     private void lblShuffleBoardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblShuffleBoardActionPerformed
         _shuffle = true;
         _useCsv = false;
-        voudEnableStartIfPossibale();
+        enableStartIfPossible();
     }//GEN-LAST:event_lblShuffleBoardActionPerformed
 
     private void lblUseCsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblUseCsvActionPerformed
         _shuffle = false;
         _useCsv = true;
-        voudEnableStartIfPossibale();
+        enableStartIfPossible();
     }//GEN-LAST:event_lblUseCsvActionPerformed
-    
-    private void voudEnableStartIfPossibale()
+
+    /**
+     * enables the start button if size and image has been selected
+     */
+    private void enableStartIfPossible()
     {
-    	if(lblSelSize.getText()!="" & lblImgSelPrev.getIcon() != null & BgroupUse.getSelection() != null) //All info selected
-            btnStart.setEnabled(true);
+    	if(_lblSelSize.getText()!="" & _lblImgSelPrev.getIcon() != null & _BgroupUse.getSelection() != null) //All info selected
+            _btnStart.setEnabled(true);
     }
-    
+
+    // Variables declaration//GEN-BEGIN:variables
     private static boolean maximized = true;
     private int xMouse;
     private int yMouse;
@@ -954,54 +1003,53 @@ public class MainMenu extends javax.swing.JFrame {
     private boolean _newImage;
     private String _newImagePath;
     private ReadCsv _read;
-    private int selSize;
-    private DefaultListModel model;
-    private ArrayList<String> aList;
-    private final String[] imgArr = {"cat","cyber","sushi"};
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup BgroupSize;
-    private javax.swing.ButtonGroup BgroupUse;
-    private javax.swing.JRadioButton _lblEnterSIze;
-    private javax.swing.JTextField _tfEnterSize;
-    private javax.swing.JButton btnAddImg;
-    private javax.swing.JButton btnExit;
-    private javax.swing.JButton btnHelp;
-    private javax.swing.JButton btnRandImg;
-    private javax.swing.JButton btnSelMenu;
-    private javax.swing.JButton btnStart;
-    private javax.swing.JButton btnTimeline;
-    private javax.swing.JList<String> imgList;
-    private javax.swing.JScrollPane imgListSP;
-    private javax.swing.JLabel lblCreatedBy;
-    private javax.swing.JLabel lblHelp;
-    private javax.swing.JLabel lblHelpMeu;
-    private javax.swing.JLabel lblImgSelPrev;
-    private javax.swing.JLabel lblSelImg;
-    private javax.swing.JLabel lblSelImgPlease;
-    private javax.swing.JLabel lblSelMenu;
-    private javax.swing.JLabel lblSelPreview;
-    private javax.swing.JLabel lblSelSize;
-    private javax.swing.JLabel lblSelSizeMenu;
-    private javax.swing.JRadioButton lblShuffleBoard;
-    private javax.swing.JLabel lblSize;
-    private javax.swing.JRadioButton lblSize3;
-    private javax.swing.JRadioButton lblSize4;
-    private javax.swing.JRadioButton lblSize5;
-    private javax.swing.JLabel lblTimeline;
-    private javax.swing.JRadioButton lblUseCsv;
-    private javax.swing.JLabel lblWelcome;
-    private javax.swing.JPanel pnlBody;
-    private javax.swing.JPanel pnlHeader;
-    private javax.swing.JPanel pnlHelp;
-    private javax.swing.JPanel pnlImagePrev;
-    private javax.swing.JPanel pnlMenu;
-    private javax.swing.JPanel pnlPreview;
-    private javax.swing.JPanel pnlSelSize;
-    private javax.swing.JPanel pnlSelecedSize;
-    private javax.swing.JPanel pnlSelectedimg;
-    private javax.swing.JPanel pnlSelection;
-    private javax.swing.JPanel pnlSelimg;
-    private javax.swing.JPanel pnlStart;
+    private int _selSize;
+    private DefaultListModel _model;
+    private ArrayList<String> _aList;
+    private final String[] _imgArr = {"cat","cyber","sushi"};
+    private ButtonGroup _BgroupSize;
+    private ButtonGroup _BgroupUse;
+    private JRadioButton _lblEnterSIze;
+    private JTextField _tfEnterSize;
+    private JButton _btnAddImg;
+    private JButton _btnExit;
+    private JButton _btnHelp;
+    private JButton _btnRandImg;
+    private JButton _btnSelMenu;
+    private JButton _btnStart;
+    private JButton _btnTimeline;
+    private JList<String> _imgList;
+    private JScrollPane _imgListSP;
+    private JLabel _lblCreatedBy;
+    private JLabel _lblHelp;
+    private JLabel _lblHelpMenu;
+    private JLabel _lblImgSelPrev;
+    private JLabel _lblSelImg;
+    private JLabel _lblSelImgPlease;
+    private JLabel _lblSelMenu;
+    private JLabel _lblSelPreview;
+    private JLabel _lblSelSize;
+    private JLabel _lblSelSizeMenu;
+    private JRadioButton _lblShuffleBoard;
+    private JLabel _lblSize;
+    private JRadioButton _lblSize3;
+    private JRadioButton _lblSize4;
+    private JRadioButton _lblSize5;
+    private JLabel _lblTimeline;
+    private JRadioButton _lblUseCsv;
+    private JLabel _lblWelcome;
+    private JPanel _pnlBody;
+    private JPanel _pnlHeader;
+    private JPanel _pnlHelp;
+    private JPanel _pnlImagePrev;
+    private JPanel _pnlMenu;
+    private JPanel _pnlPreview;
+    private JPanel _pnlSelSize;
+    private JPanel _pnlSelecedSize;
+    private JPanel _pnlSelectedimg;
+    private JPanel _pnlSelection;
+    private JPanel _pnlSelimg;
+    private JPanel _pnlStart;
     // End of variables declaration//GEN-END:variables
 
 }

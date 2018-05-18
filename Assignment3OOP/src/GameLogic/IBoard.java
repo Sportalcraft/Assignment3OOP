@@ -1,4 +1,4 @@
-package GameFrame;
+package GameLogic;
 
 /**
  * This interface represent the board

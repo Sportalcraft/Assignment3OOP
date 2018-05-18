@@ -1,9 +1,9 @@
-package GameFrame;
+package GameLogic;
 
 /**
  * This class represent a tile
  */
-class Tile extends AbstractTile
+public class Tile extends AbstractTile
 {	
 	/**
 	 * The constructor of Tile class

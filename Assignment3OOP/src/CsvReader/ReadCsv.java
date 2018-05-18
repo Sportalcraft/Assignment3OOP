@@ -1,4 +1,4 @@
-package GameFrame;
+package CsvReader;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

@@ -1,4 +1,4 @@
-package GameFrame;
+package GameLogic;
 
 import java.util.List;
 import java.util.Random;
@@ -7,7 +7,7 @@ import java.util.Vector;
 /**
  * This class represent a board
  */
-class Board implements IBoard
+public class Board implements IBoard
 {
 	/**
 	 * holds the tiles if this board

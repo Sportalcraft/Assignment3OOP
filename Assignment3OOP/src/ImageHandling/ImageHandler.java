@@ -1,4 +1,4 @@
-package GameFrame;
+package ImageHandling;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -19,7 +19,7 @@ import javax.swing.JLabel;
 /**
  * This class handle the images
  */
-class ImageHandler {
+public class ImageHandler {
 
 	private final static String Temp_Photo_Directory = "images/Temp";
 	

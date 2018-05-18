@@ -1,6 +1,7 @@
 package GameFrame;
 
 import java.awt.Dimension;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,11 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+
+import GameLogic.Board;
+import ImageHandling.ImageHandler;
+
+import CsvReader.ReadCsv;
 
 public class BoardPanel extends JPanel implements ActionListener {
         /**
@@ -85,7 +91,7 @@ public class BoardPanel extends JPanel implements ActionListener {
                     if (file != null) {              
                         _buttons[i][j].setIcon(new ImageIcon(ImageHandler.scaledImg(file, _buttons[i][j])));
                     } else {
-                        _buttons[i][j].setIcon(new ImageIcon());
+                        _buttons[i][j].setIcon(new ImageIcon(""));
                     }
 
                     _buttons[i][j].addActionListener(this);

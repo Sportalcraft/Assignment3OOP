@@ -1,6 +1,6 @@
-package GameFrame;
+package GameLogic;
 
-class EmptyTile extends AbstractTile
+public class EmptyTile extends AbstractTile
 {
 	/**
 	 * should the image of the tile be displayed?

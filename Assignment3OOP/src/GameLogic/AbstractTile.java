@@ -1,4 +1,4 @@
-package GameFrame;
+package GameLogic;
 
 /**
  * This class represent a Tile on the board
@@ -17,7 +17,6 @@ abstract class AbstractTile implements ITile
 	
 	/**
 	 * The constructor of AbstractTile class
-	 * @param position the position if this tile
 	 * @param desirablePosition the position if this tile on a solved board
 	  * @param content the image of this tile
 	 */
