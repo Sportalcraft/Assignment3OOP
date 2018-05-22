@@ -39,8 +39,7 @@ public class Board implements IBoard
 			while(!shuffled) // just to make sure the board is truly shuffled
 			{		
 				shuffle();
-				shuffled = !isComplete();
-                                _solved = false;
+				shuffled = !isSolved();                          
 			}
 		}
 		else 
@@ -99,6 +98,18 @@ public class Board implements IBoard
 	@Override
 	public boolean isComplete() {
 			
+		if(isSolved())
+		{
+			lock(); 	 // Lock the board - it is solved           
+			return true; // All tiles in place
+		}
+		
+		return false;
+	}
+	
+	// Check ifthe board is solved
+	private boolean isSolved() {
+		
 		int currentPlace = 0;
 		
 		if(isLocked())
@@ -113,9 +124,7 @@ public class Board implements IBoard
 				
 				currentPlace++;
 			}
-		}
-		
-		lock(); 	 // Lock the board - it is solved           
+		}    
 		return true; // All tiles in place
 	}
 	
@@ -309,7 +318,7 @@ public class Board implements IBoard
 		Random rnd = new Random();
 		List<Integer> neighbors;
 		int swapWith;
-		int numOfShuffles = rnd.nextInt(boardSize()*boardSize()*boardSize()*boardSize()); // number of times an automatic move will be made
+		int numOfShuffles = rnd.nextInt(boardSize()*boardSize()*boardSize()*boardSize()*boardSize()); // number of times an automatic move will be made
 		
 		for(int i=1; i<= numOfShuffles; i++)
 		{
